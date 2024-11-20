@@ -1,0 +1,51 @@
+services:
+  feedfront:
+    build:
+      context: ./feedfront
+      dockerfile: ./Dockerfile-dev
+    container_name: feedfront-frontend
+    ports:
+      - "3000:3000"
+  feedback:
+    build: ./feedback
+    container_name: feedfront-backend
+    ports:
+      - "3001:3000"
+  internal-database:
+    image: postgres:17
+    container_name: feedfront-internal-database
+    restart: always
+
+    # Set shared memory limit when using docker-compose. This is a good practice according to the official PostgreSQL documentation.
+    shm_size: 128mb
+
+    environment:
+      POSTGRES_USER: pgsql_feedfront
+      POSTGRES_PASSWORD: pgsql_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      # SQL script to initialize the database
+      - ./internal-db-init.sql:/docker-entrypoint-initdb.d/internal-db-init.sql
+      - internaldb:/var/lib/postgresql/data
+  school-database:
+    image: postgres:17
+    container_name: feedfront-school-database
+    restart: always
+
+    # Set shared memory limit when using docker-compose. This is a good practice according to the official PostgreSQL documentation.
+    shm_size: 128mb
+
+    environment:
+      POSTGRES_USER: pgsql_school
+      POSTGRES_PASSWORD: pgsql_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      # SQL script to initialize the database
+      - ./school-db-init.sql:/docker-entrypoint-initdb.d/school-db-init.sql
+      - schooldb:/var/lib/postgresql/data
+
+volumes:
+  internaldb:
+  schooldb:
