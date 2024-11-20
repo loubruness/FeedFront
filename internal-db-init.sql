@@ -1,8 +1,5 @@
 -- INITIALIZE DATABASE SCHEMA
 
--- CREATE DATABASE feedfront;
--- GRANT ALL PRIVILEGES ON DATABASE feedfront TO pgsql_feedfront;
-
 CREATE TABLE user_app (
    Id SERIAL,
    hashed_password VARCHAR(50) NOT NULL,
