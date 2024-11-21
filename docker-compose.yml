@@ -1,16 +1,18 @@
 services:
   feedfront:
-    build:
-      context: ./feedfront
-      dockerfile: ./Dockerfile-dev
+    build: ./feedfront
     container_name: feedfront-frontend
     ports:
       - "3000:3000"
+    volumes:
+      - ./feedfront/:/app/
   feedback:
     build: ./feedback
     container_name: feedfront-backend
     ports:
       - "3001:3000"
+    volumes:
+      - ./feedback/:/app/
   efrei-api:
     build: ./efrei-api
     container_name: feedfront-efrei-api
