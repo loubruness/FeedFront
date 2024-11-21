@@ -11,6 +11,13 @@ services:
     container_name: feedfront-backend
     ports:
       - "3001:3000"
+  efrei-api:
+    build:
+      context: ./efrei-api
+      dockerfile: ./Dockerfile-prod
+    container_name: feedfront-efrei-api
+    ports:
+      - "8000:8000"
   internal-database:
     image: postgres:17
     container_name: feedfront-internal-database
