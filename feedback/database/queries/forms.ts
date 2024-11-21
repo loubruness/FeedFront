@@ -1,34 +1,22 @@
 import { db } from '../db_connection';
 
 export type Field = {
-  id: number;
-  id_form: number;
+  id_field: number;
   name: string;
   question: string;
 };
 
 export type Form = {
-  id: number;
+  id_form: number;
   course_name: string;
-  level: string;
+  end_date: Date;
+};
+
+export type FormWithFields = {
+  id_form: number;
+  course_name: string;
   end_date: Date;
   fields: Array<Field>;
-};
-
-export type FieldResponse = {
-  id: number;
-  id_form: number;
-  name: string;
-  question: string;
-  note: number;
-};
-
-export type FormResponse = {
-  id: number;
-  course_name: string;
-  level: string;
-  form_id: number;
-  fields: Array<FieldResponse>;
 };
 
 
@@ -36,23 +24,26 @@ export const getForms = async (): Promise<Form[]> => {
   return await db('forms').select('*');
 };
 
-export const getFormById = async(id
-: number): Promise<Form> => {
-  return (await db('forms').select('*').where('id', id))[0];
+const getFormById = async (id_form: number): Promise<Form> => {
+  return (await db('forms').select('*').where('id_form', id_form))[0];
+};
+
+const getFormFields = async(id_form : number): Promise<Field[]> => {
+  return await db('fields').select('*').where('id_form', id_form);
 }
 
-export const getFormResponses = async(id : number): Promise<FormResponse[]> => {
-  return await db('forms_responses').select('*').where('form_id', id);
-}
+export const getFormWithFields = async (id_form: number): Promise<FormWithFields> => {
+  const form = await getFormById(id_form);
+  return {
+    ...form,
+    fields: await getFormFields(id_form),
+  };
+};
 
-export const getFormResponseById = async(id : number): Promise<FormResponse> => {
-  return (await db('forms_responses').select('*').where('id', id))[0];
-}
-
-export const getFormFields = async(id : number): Promise<Field[]> => {
-  return await db('fields').select('*').where('id_form', id);
-}
-
-export const getFormFieldsResponses = async(id : number): Promise<FieldResponse[]> => {
-  return await db('fields_responses').select('*').where('form_id', id);
-}
+export const createFormWithFields = async (form: FormWithFields): Promise<FormWithFields> => {
+  const { fields, ...formData } = form;
+  const [id_form] = await db('forms').insert(formData).returning('id');
+  const fieldsWithId = fields.map((field) => ({ ...field, id_form: id_form }));
+  await db('fields').insert(fieldsWithId);
+  return { ...form, id_form };
+};
