@@ -2,6 +2,8 @@ import express, { NextFunction, Request, Response } from 'express';
 
 import authRoutes from './routes/auth';
 import dotenv from 'dotenv';
+import otherRoutes from './routes/verifyToken';
+import {verifyToken} from './middlewares/security';
 
 dotenv.config();
 
@@ -23,3 +25,8 @@ app.listen(PORT, (error?: Error) => {
 });
 
 app.use('/auth', authRoutes);
+
+// middleware for verifying token
+app.use(verifyToken);
+
+app.use('/other', otherRoutes);

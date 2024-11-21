@@ -24,7 +24,7 @@ services:
       POSTGRES_PASSWORD: pgsql_pass
       POSTGRES_DB: feedfront
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       # SQL script to initialize the database
       - ./internal-db-init.sql:/docker-entrypoint-initdb.d/internal-db-init.sql
