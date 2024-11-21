@@ -33,7 +33,7 @@ CREATE TABLE token_used (
    PRIMARY KEY(token)
 );
 
-CREATE TABLE form (
+CREATE TABLE forms (
    Id_form SERIAL,
    course_name VARCHAR(50) NOT NULL,
    level VARCHAR(50) NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE form (
    FOREIGN KEY(Id_admin) REFERENCES admin(Id)
 );
 
-CREATE TABLE field (
+CREATE TABLE fields (
    Id_form INT,
    Id_field SERIAL,
    name VARCHAR(200) NOT NULL,
@@ -53,14 +53,14 @@ CREATE TABLE field (
    FOREIGN KEY(Id_form) REFERENCES form(Id_form)
 );
 
-CREATE TABLE response (
+CREATE TABLE responses (
    Id_response SERIAL,
    Id_form INT NOT NULL,
    PRIMARY KEY(Id_response),
    FOREIGN KEY(Id_form) REFERENCES form(Id_form)
 );
 
-CREATE TABLE teacher_form (
+CREATE TABLE teachers_forms (
    Id_teacher INT,
    Id_form INT,
    PRIMARY KEY(Id_teacher, Id_form),
@@ -68,7 +68,7 @@ CREATE TABLE teacher_form (
    FOREIGN KEY(Id_form) REFERENCES form(Id_form)
 );
 
-CREATE TABLE student_form (
+CREATE TABLE students_forms (
    Id_student INT,
    Id_form INT,
    token TEXT NOT NULL,
@@ -78,7 +78,7 @@ CREATE TABLE student_form (
    FOREIGN KEY(Id_form) REFERENCES form(Id_form)
 );
 
-CREATE TABLE note (
+CREATE TABLE notes (
    Id_form INT,
    Id_field INT,
    Id_response INT,
