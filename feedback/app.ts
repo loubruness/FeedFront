@@ -1,4 +1,9 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
+
+import authRoutes from './routes/auth';
+import dotenv from 'dotenv';
+
+dotenv.config();
 import { json } from 'body-parser';
 import forms from './routes/forms';
 import responses from './routes/responses';
@@ -7,8 +12,7 @@ import cors from 'cors';
 const app = express();
 const PORT: number = 3000;
 
-app.use(json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.send('Hello World');
@@ -24,3 +28,5 @@ app.listen(PORT, (error?: Error) => {
         console.error("Error occurred, server can't start", error);
     }
 });
+
+app.use('/auth', authRoutes);

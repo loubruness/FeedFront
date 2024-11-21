@@ -1,16 +1,25 @@
 services:
   feedfront:
-    build:
-      context: ./feedfront
-      dockerfile: ./Dockerfile-dev
+    build: ./feedfront
     container_name: feedfront-frontend
     ports:
       - "3000:3000"
+    volumes:
+      - ./feedfront/:/app/
   feedback:
     build: ./feedback
     container_name: feedfront-backend
     ports:
       - "3001:3000"
+    volumes:
+      - ./feedback/:/app/
+  efrei-api:
+    build: ./efrei-api
+    container_name: feedfront-efrei-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./efrei-api/:/app/
   internal-database:
     image: postgres:17
     container_name: feedfront-internal-database
@@ -46,7 +55,7 @@ services:
     volumes:
       # SQL script to initialize the database
       - ./school-db-init.sql:/docker-entrypoint-initdb.d/school-db-init.sql
-      - schooldb:/var/lib/postgresql/data
+        #- schooldb:/var/lib/postgresql/data
 
 volumes:
   internaldb:
