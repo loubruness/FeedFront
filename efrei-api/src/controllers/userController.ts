@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import roles from "../util/roles";
-import { User } from "../util/user";
+import { Level, User } from "../util/user";
 
 // TODO: Move this somewhere else once the database is done
 const usersList: Array<User> = [
@@ -15,14 +15,23 @@ const usersList: Array<User> = [
     "pass",
     roles.TEACHER
   ),
-  new User(5, "Student", "STUDENT", "student@efrei.net", "pass", roles.STUDENT),
+  new User(
+    5,
+    "Student",
+    "STUDENT",
+    "student@efrei.net",
+    "pass",
+    roles.STUDENT,
+    Level.P1
+  ),
   new User(
     6,
     "Student2",
     "STUDENT2",
     "student2@efrei.net",
     "pass",
-    roles.STUDENT
+    roles.STUDENT,
+    Level.I2
   ),
 ];
 
@@ -122,6 +131,7 @@ export const login = (req: Request, res: Response) => {
     lastname: user.lastname,
     email: user.email,
     role: user.role,
+    level: user.level,
   });
 };
 
