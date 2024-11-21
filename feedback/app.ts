@@ -1,7 +1,14 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
+
+import authRoutes from './routes/auth';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const PORT: number = 3000;
+
+app.use(express.json());
 
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.send('Hello World');
@@ -14,3 +21,5 @@ app.listen(PORT, (error?: Error) => {
         console.error("Error occurred, server can't start", error);
     }
 });
+
+app.use('/auth', authRoutes);

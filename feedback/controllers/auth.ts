@@ -1,13 +1,57 @@
-// import { checkExistsUser, createUser, getUserByEmailwithHashedPassword, getUserById } from '../database/queries/user.js';
+// import { checkExistsUser, createUser, getUserByEmailwithHashedPassword, getUserById } from '../database/queries/auth.tsx';
 // import { compare, hash } from 'bcrypt';
 
-// import jwt from 'jsonwebtoken';
+import { Request, Response } from "express";
 
-// const { sign } = jwt;
+import jwt from 'jsonwebtoken';
 
-// function createToken(user_id, user_type) {
-//     return sign({user_id: user_id, user_type: user_type}, process.env.SECRET_KEY, { expiresIn: '1h' });
-// }
+const { sign } = jwt;
+
+function createToken(user_id: number, user_type: string) {
+    const secretKey = process.env.SECRET_KEY;
+
+    if (!secretKey) {
+        throw new Error("SECRET_KEY is not defined in the environment variables");
+    }
+    
+    return sign({user_id: user_id, user_type: user_type}, secretKey, { expiresIn: '1h' });
+}
+
+async function login(request: Request, response: Response) : Promise<void>{
+    
+    console.log(request.body);
+    const email = request.body.email;
+    const password = request.body.password;
+    
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    const raw = JSON.stringify({
+    "email": email,
+    "password": password
+    });
+
+    const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow" as RequestRedirect
+    };
+
+    try {
+        const fetchResponse = await fetch("http://localhost:8000/user/login", requestOptions);
+        const result = await fetchResponse.json();
+
+        console.log(result);
+
+        if(result != null){
+            response.status(200).json({info: "user logged in successfully", token: createToken(result.id, result.role), role: result.role});
+        }
+    } catch (error) {
+        console.error(error);
+        response.status(500).json({error: "Internal Server Error"});
+    }
+}
 
 // async function createUserAction(request, response) {
 //     if (!await checkExistsUser(request.body.email)) {
@@ -48,8 +92,6 @@
 //     return response.status(200).json({info: 'Valid token', user_id: request.user_id});
 // }
 
-// export {
-//     createUserAction,
-//     loginUserAction,
-//     verifyTokenAction
-// };
+export {
+    login
+};
