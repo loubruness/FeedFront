@@ -26,14 +26,22 @@ const FeedbackForm = () => {
     alert("Form Sent Successfully!");
   };
 
-  const handleSubmitForm = () => {
+const handleSubmitForm = () => {
     const scores = questions.map((q) => {
-        const score = (document.querySelector(`input[name="q${q.id}"]:checked`) as HTMLInputElement)?.value || "No Score";
+        const score = (document.querySelector(`input[name="q${q.id}"]:checked`) as HTMLInputElement)?.value || null;
         return { id: q.id, score };
-      });
-      console.log("Form Sent:", { formTitle, questions, scores });
+    });
+
+    const allAnswered = scores.every((s) => s.score !== null);
+
+    if (!allAnswered) {
+        alert("Please answer all the questions before submitting the form.");
+        return;
+    }
+
+    console.log("Form Sent:", { formTitle, questions, scores });
     alert("Your responses have been submitted!");
-  };
+};
 
   const updateQuestion = (id: number, key: string, value: string) => {
     if (userRole === "admin") {
