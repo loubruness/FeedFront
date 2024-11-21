@@ -50,14 +50,14 @@ CREATE TABLE fields (
    name VARCHAR(200) NOT NULL,
    question TEXT,
    PRIMARY KEY(Id_form, Id_field),
-   FOREIGN KEY(Id_form) REFERENCES form(Id_form)
+   FOREIGN KEY(Id_form) REFERENCES forms(Id_form)
 );
 
 CREATE TABLE responses (
    Id_response SERIAL,
    Id_form INT NOT NULL,
    PRIMARY KEY(Id_response),
-   FOREIGN KEY(Id_form) REFERENCES form(Id_form)
+   FOREIGN KEY(Id_form) REFERENCES forms(Id_form)
 );
 
 CREATE TABLE teachers_forms (
@@ -65,7 +65,7 @@ CREATE TABLE teachers_forms (
    Id_form INT,
    PRIMARY KEY(Id_teacher, Id_form),
    FOREIGN KEY(Id_teacher) REFERENCES teacher(Id),
-   FOREIGN KEY(Id_form) REFERENCES form(Id_form)
+   FOREIGN KEY(Id_form) REFERENCES forms(Id_form)
 );
 
 CREATE TABLE students_forms (
@@ -75,7 +75,7 @@ CREATE TABLE students_forms (
    PRIMARY KEY(Id_student, Id_form),
    UNIQUE(token),
    FOREIGN KEY(Id_student) REFERENCES student(Id),
-   FOREIGN KEY(Id_form) REFERENCES form(Id_form)
+   FOREIGN KEY(Id_form) REFERENCES forms(Id_form)
 );
 
 CREATE TABLE notes (
@@ -84,8 +84,8 @@ CREATE TABLE notes (
    Id_response INT,
    note DECIMAL(2, 0) NOT NULL,
    PRIMARY KEY(Id_form, Id_field, Id_response),
-   FOREIGN KEY(Id_form, Id_field) REFERENCES field(Id_form, Id_field),
-   FOREIGN KEY(Id_response) REFERENCES response(Id_response)
+   FOREIGN KEY(Id_form, Id_field) REFERENCES fields(Id_form, Id_field),
+   FOREIGN KEY(Id_response) REFERENCES responses(Id_response)
 );
 
 -- INSERT SAMPLE DATA
