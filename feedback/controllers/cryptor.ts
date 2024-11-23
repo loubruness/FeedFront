@@ -10,7 +10,7 @@ function encryptRole(role) {
     encrypted = Buffer.concat([encrypted, cipher.final()]);
     return {
         iv : iv.toString('hex'),
-        encryptId : encrypted.toString('hex')
+        encryptRole : encrypted.toString('hex')
     };
 }
 

@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 
 import authRoutes from './routes/auth';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import emailRoutes from './routes/email';
 import hbs from 'nodemailer-handlebars';
@@ -15,9 +16,15 @@ const { sign } = jwt;
 dotenv.config();
 
 const app = express();
-const PORT: number = 3000;
+const PORT: number = 3001;
 
 app.use(express.json());
+
+app.use(cors({
+    origin: '*', // Allow requests from this origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
+    allowedHeaders: ['Content-Type'], // Allow specific headers
+}));
 
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.send('Hello World');

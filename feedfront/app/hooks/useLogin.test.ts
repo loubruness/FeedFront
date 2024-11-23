@@ -1,5 +1,6 @@
-import { useLogin } from '../hooks/useLogin';
 import * as auth from '../api/auth';
+
+import { useLogin } from '../hooks/useLogin';
 
 jest.mock('../api/auth'); // Mock the auth API module
 
@@ -13,8 +14,8 @@ describe('useLogin Hook', () => {
 
     it('handles successful login', async () => {
         const mockOnSuccess = jest.fn();
-        const mockLogin = jest.spyOn(auth, 'login').mockResolvedValue({ token: 'fake-token' });
-        const mockFetchProfile = jest.spyOn(auth, 'fetchProfile').mockResolvedValue({ id: '123', username: 'Test User' });
+        const mockLogin = jest.spyOn(auth, 'login').mockResolvedValue({ info :"ook", token: 'fake-token' , role: { iv: '123', encryptRole: 'Test Role' } });
+        const mockFetchProfile = jest.spyOn(auth, 'fetchProfile').mockResolvedValue({ email: 'test@efrei.fr', name : 'Test', lastname : 'User' });
 
         const { handleLogin } = useLogin(mockOnSuccess);
 
