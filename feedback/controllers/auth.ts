@@ -1,7 +1,9 @@
 // import { checkExistsUser, createUser, getUserByEmailwithHashedPassword, getUserById } from '../database/queries/auth.tsx';
-// import { compare, hash } from 'bcrypt';
+
+import 'dotenv/config';
 
 import { Request, Response } from "express";
+import { decryptRole, encryptRole } from "./cryptor";
 
 import jwt from 'jsonwebtoken';
 
@@ -45,11 +47,23 @@ async function login(request: Request, response: Response) : Promise<void>{
         console.log(result);
 
         if(result != null){
-            response.status(200).json({info: "user logged in successfully", token: createToken(result.id, result.role), role: result.role});
+            const cryptedRole = await encryptRole(result.role);
+            response.status(200).json({info: "user logged in successfully", token: createToken(result.id, result.role), role: cryptedRole});
         }
     } catch (error) {
         console.error(error);
         response.status(500).json({error: "Internal Server Error"});
+    }
+}
+
+async function decryptUserRole(request: Request, response: Response): Promise<void> {
+    const cryptedRole = request.query.cryptedRole as string;
+    const iv = request.query.iv as string;
+    if (!cryptedRole) {
+        response.status(400).json({error: "No cryptedRole provided"});
+        return;
+    }else{
+        response.status(200).json({role: decryptRole(cryptedRole, iv)});
     }
 }
 
@@ -93,5 +107,6 @@ async function login(request: Request, response: Response) : Promise<void>{
 // }
 
 export {
-    login
+    login,
+    decryptUserRole
 };
