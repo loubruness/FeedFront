@@ -3,77 +3,27 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 
 import Image from "next/image";
-// import Link from 'next/link';
 import logo from '../assets/logo.png';
 import chouette from '../assets/chouette2.jpeg';
 import { useRouter } from 'next/navigation';
+import { useLogin } from '../../hooks/useLogin';
+import { SUPPORT_PHONE, LEGAL_MESSAGE } from '../../constants/auth';
 
 
 export default function Login() {
     const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
-	const [error, setError] = useState<string>('');
-	const [loading, setLoading] = useState<string>('');
+    const { handleLogin, loading, error } = useLogin(() => router.push('/Login'));
 
     const router = useRouter();
 
-	const handleSubmit = async (e: FormEvent) => {
-		e.preventDefault();
-		setLoading('Loading...');
-		setError('');
+    const handleSubmit = (event: FormEvent) => {
+        event.preventDefault();
+        handleLogin(email, password);
+    };
 
-		try {
-			const response = await fetch('/api/login', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ email, password }),
-			});
-
-			if (!response.ok) {
-				const errorData = await response.json();
-				throw new Error(errorData.message || 'Failed to sign in');
-			}
-			const data = await response.json();
-			localStorage.setItem('token', data.token);
-			const token = data.token;
-			console.log('Login successful:', data);
-
-			const responseName = await fetch('/api/profile_page', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ token }),
-			});
-
-			if (!response.ok) {
-				const errorData = await responseName.json();
-				throw new Error(errorData.message || 'Failed to sign in');
-			}
-
-			const dataName = await responseName.json();
-			localStorage.setItem('userId', dataName.id);
-			localStorage.setItem('userName', dataName.username);
-			localStorage.setItem('userId', dataName.id);
-			console.log('Login successful:', dataName);
-
-			router.push('/homepage');
-		} catch (error: unknown) {
-            if (error instanceof Error) {
-                setError(error.message);
-                console.error('Error logging in:', error);
-            } else {
-                console.error('Unknown error:', error);
-            }
-        } finally {
-			setLoading('');
-		}
-	};
-
-	const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value);
-	const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value);
+	const handleEmailChange = (event: ChangeEvent<HTMLInputElement>) => setEmail(event.target.value);
+	const handlePasswordChange = (event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-900 to-sky-700 text-gray-900 flex justify-center">
@@ -113,15 +63,15 @@ export default function Login() {
                             <div className="my-12 border-b text-center">
                                 <div
                                     className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
-                                    Forgot your id ? Call the +33 188 289 250
+                                     Forgot your ID? Call {SUPPORT_PHONE}
                                 </div>
                             </div>
 
                             <div className="my-12 border-b text-center">
                                 <div
                                     className="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">
-                                    By connecting, I accept the conditions of use of the SSO Efrei service, particularly in terms of personal data.
-                                </div>
+                                        {LEGAL_MESSAGE}                                
+                                    </div>
                             </div>
                         </div>
                     </div>
