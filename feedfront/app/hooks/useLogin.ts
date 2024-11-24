@@ -20,7 +20,8 @@ export const useLogin = (onSuccess: () => void) => {
             localStorage.setItem('iv', iv);
             localStorage.setItem('encryptRole', encryptRole);
             const profile: ProfileResponse = await fetchProfile(token, iv, encryptRole);
-            localStorage.setItem('name', profile.name + ' ' + profile.lastname);
+            localStorage.setItem('name', profile.name);
+            localStorage.setItem('lastname', profile.lastname);
             localStorage.setItem('email', profile.email);
             onSuccess();
         } catch (err) {

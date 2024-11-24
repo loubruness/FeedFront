@@ -1,28 +1,50 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto';
 
-const algorithm = 'aes-256-cbc';
-const secretKey = createHash('sha256').update(process.env.SECRET_KEY_ROLE).digest('base64').slice(0, 32);
-const iv = randomBytes(16);
-
-function encryptRole(role) {
-    const cipher = createCipheriv(algorithm, Buffer.from(secretKey), iv);
-    let encrypted = cipher.update(role.toString());
-    encrypted = Buffer.concat([encrypted, cipher.final()]);
-    return {
-        iv : iv.toString('hex'),
-        encryptRole : encrypted.toString('hex')
-    };
+// Validate and derive the secret key
+const SECRET_KEY_ROLE = process.env.SECRET_KEY_ROLE;
+if (!SECRET_KEY_ROLE) {
+    throw new Error("SECRET_KEY_ROLE is not defined in environment variables.");
 }
 
-function decryptRole(encryptedRole, iv) {
-    const encryptedText = Buffer.from(encryptedRole, 'hex');
-    const decipher = createDecipheriv(algorithm, Buffer.from(secretKey), Buffer.from(iv, 'hex'));
-    let decrypted = decipher.update(encryptedText);
-    decrypted = Buffer.concat([decrypted, decipher.final()]);
-    return decrypted.toString();
+const ALGORITHM = 'aes-256-cbc';
+const SECRET_KEY = createHash('sha256').update(SECRET_KEY_ROLE).digest('base64').slice(0, 32);
+
+/**
+ * Encrypt a role using AES-256-CBC.
+ * @param role - The role to encrypt.
+ * @param iv - Optional initialization vector (IV); generated if not provided.
+ * @returns An object containing the IV and the encrypted role.
+ */
+function encryptRole(role: string, iv: Buffer = randomBytes(16)): { iv: string; encryptedRole: string } {
+    try {
+        const cipher = createCipheriv(ALGORITHM, Buffer.from(SECRET_KEY), iv);
+        let encrypted = cipher.update(role, 'utf8');
+        encrypted = Buffer.concat([encrypted, cipher.final()]);
+        return {
+            iv: iv.toString('hex'),
+            encryptedRole: encrypted.toString('hex'),
+        };
+    } catch (error) {
+        throw new Error(`Error encrypting role: ${error.message}`);
+    }
 }
 
-export {
-    encryptRole,
-    decryptRole
-};
+/**
+ * Decrypt an encrypted role using AES-256-CBC.
+ * @param encryptedRole - The encrypted role as a hex string.
+ * @param iv - The initialization vector (IV) as a hex string.
+ * @returns The decrypted role as a string.
+ */
+function decryptRole(encryptedRole: string, iv: string): string {
+    try {
+        const encryptedText = Buffer.from(encryptedRole, 'hex');
+        const decipher = createDecipheriv(ALGORITHM, Buffer.from(SECRET_KEY), Buffer.from(iv, 'hex'));
+        let decrypted = decipher.update(encryptedText);
+        decrypted = Buffer.concat([decrypted, decipher.final()]);
+        return decrypted.toString('utf8');
+    } catch (error) {
+        throw new Error(`Error decrypting role: ${error.message}`);
+    }
+}
+
+export { encryptRole, decryptRole };
