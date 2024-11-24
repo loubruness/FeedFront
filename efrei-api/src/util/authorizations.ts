@@ -1,6 +1,6 @@
 enum authorizations {
-  API_STUDENT_READ = "api.student.read",
-  API_STUDENT_WRITE = "api.student.write",
+  API_USER_READ = "api.user.read",
+  API_USER_WRITE = "api.user.write",
 }
 
 export default authorizations;

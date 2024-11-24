@@ -135,3 +135,46 @@ export const getUserCourses = (req: Request, res: Response) => {
         });
     });
 };
+
+/**
+ * Retrieves a user by their ID from the database and sends the user data as a JSON response.
+ *
+ * @param req - The request object, containing the user ID in the request parameters.
+ * @param res - The response object, used to send the JSON response.
+ *
+ * @remarks
+ * This function queries the "efreiuser" table in the database to find a user with the specified ID.
+ * If the user is found, their details (firstname, lastname, email, role, and level) are sent in the response.
+ * If the user is not found, a 404 status code and an error message are sent in the response.
+ *
+ * @example
+ * // Example request URL: /user/1
+ * // Example response:
+ * // {
+ * //   "firstname": "John",
+ * //   "lastname": "Doe",
+ * //   "email": "john.doe@example.com",
+ * //   "role": "student",
+ * //   "level": 3
+ * // }
+ */
+export const getUser = (req: Request, res: Response) => {
+  // Get the user from the id
+  db("efreiuser")
+    .where({ id: +req.params.id })
+    .first()
+    .then((user: User) => {
+      // If the user is not found
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+
+      // If the user is found, return it.
+      res.json({
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+      });
+    });
+};
