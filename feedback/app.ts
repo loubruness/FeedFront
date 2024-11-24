@@ -14,6 +14,10 @@ import {verifyToken} from './middlewares/security';
 const { sign } = jwt;
 
 dotenv.config();
+import { json } from 'body-parser';
+import forms from './routes/forms';
+import responses from './routes/responses';
+import cors from 'cors';
 
 const app = express();
 const PORT: number = 3001;
@@ -29,6 +33,9 @@ app.use(cors({
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.send('Hello World');
 });
+app.use(cors());
+app.use('/forms', forms);
+app.use('/responses', responses);
 
 app.listen(PORT, (error?: Error) => {
     if (!error) {

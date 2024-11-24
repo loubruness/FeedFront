@@ -5,6 +5,6 @@ import authorizations from "../util/authorizations";
 
 const router = Router();
 
-router.get("/", authenticate(authorizations.API_STUDENT_READ), getAllStudents);
+router.get("/", authenticate(authorizations.API_USER_READ), getAllStudents);
 
 export default router;

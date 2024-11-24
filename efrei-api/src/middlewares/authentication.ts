@@ -8,7 +8,7 @@ const user_authorizations: Array<{
 }> = [
   {
     key: "apikey",
-    authorizations: [authorizations.API_STUDENT_READ],
+    authorizations: [authorizations.API_USER_READ],
   },
 ];
 

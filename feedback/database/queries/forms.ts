@@ -1,58 +1,90 @@
 import { db } from '../db_connection';
 
 export type Field = {
-  id: number;
-  id_form: number;
-  name: string;
+  id_field: number;
+  title: string;
   question: string;
 };
 
 export type Form = {
-  id: number;
+  id_form: number;
+  id_admin: number;
   course_name: string;
-  level: string;
+  end_date: Date;
+};
+
+export type FormWithFields = {
+  id_form: number;
+  course_name: string;
   end_date: Date;
   fields: Array<Field>;
 };
 
-export type FieldResponse = {
-  id: number;
-  id_form: number;
-  name: string;
-  question: string;
-  note: number;
-};
-
-export type FormResponse = {
-  id: number;
-  course_name: string;
-  level: string;
-  form_id: number;
-  fields: Array<FieldResponse>;
-};
-
 
 export const getForms = async (): Promise<Form[]> => {
-  return await db('forms').select('*');
+  try {
+    return await db('forms').select('*');
+  }
+  catch (error) {
+    throw error;
+  }
 };
 
-export const getFormById = async(id
-: number): Promise<Form> => {
-  return (await db('forms').select('*').where('id', id))[0];
+const getFormById = async (id_form: number): Promise<Form> => {
+  try {
+    return (await db('forms').select('*').where('id_form', id_form))[0];
+  }
+  catch (error) {
+    throw error;
+  }
+
+};
+
+const getFormFields = async (id_form: number): Promise<Field[]> => {
+  try {
+    return await db('fields').select('*').where('id_form', id_form);
+  }
+  catch (error) {
+    throw error;
+  }
 }
 
-export const getFormResponses = async(id : number): Promise<FormResponse[]> => {
-  return await db('forms_responses').select('*').where('form_id', id);
-}
+export const getFormWithFields = async (id_form: number): Promise<FormWithFields> => {
+  try {
+    const form = await getFormById(id_form);
+    return {
+      ...form,
+      fields: await getFormFields(id_form),
+    };
+  }
+  catch (error) {
+    throw error;
+  }
+};
 
-export const getFormResponseById = async(id : number): Promise<FormResponse> => {
-  return (await db('forms_responses').select('*').where('id', id))[0];
-}
+export const createFormWithFields = async (form: FormWithFields): Promise<FormWithFields> => {
+  try {
+    const { fields,id_form:undefined, ...formData } = form;
+    const [{id_form}] = await db('forms').insert(formData).returning('id_form');
+    const fieldsWithId = fields.map((field) => ({ id_form, id_field: undefined, ...field }));
+    await db('fields').insert(fieldsWithId);
+    return { ...form, id_form };
+  }
+  catch (error) {
+    throw error;
+  }
+};
 
-export const getFormFields = async(id : number): Promise<Field[]> => {
-  return await db('fields').select('*').where('id_form', id);
-}
-
-export const getFormFieldsResponses = async(id : number): Promise<FieldResponse[]> => {
-  return await db('fields_responses').select('*').where('form_id', id);
+export const updateFormWithFields = async (form: FormWithFields): Promise<FormWithFields> => {
+  try {
+    const { fields, ...formData } = form;
+    await db('forms').update(formData).where('id_form', form.id_form);
+    const fieldsWithId = fields.map((field) => ({ id_form: form.id_form, ...field }));
+    await db('fields').where('id_form', form.id_form).del();
+    await db('fields').insert(fieldsWithId);
+    return form;
+  }
+  catch (error) {
+    throw error;
+  }
 }
