@@ -1,48 +1,8 @@
 "use client";
 
-
 import React, { use, useState, useEffect } from "react";
-
-const host = "http://localhost:3000";
-
-const saveForm = (form: FormWithFields) => {
-  fetch(`${host}/forms/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(form),
-  }).then((res) => {
-    if (res.ok) {
-      alert("Form Saved Successfully!");
-    } else {
-      alert("Form Save Failed!");
-    }
-  });
-}
-
-const loadForm = async (id: number): Promise<FormWithFields> => {
-  const response = await fetch(`${host}/forms/${id}`);
-  const data = await response.json();
-  return data;
-}
-
-const submitAnswer = async (response: Answer) => {
-  fetch(`${host}/responses/`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(response),
-  }).then((res) => {
-    if (res.ok) {
-      alert("Response Submitted Successfully!");
-    } else {
-      alert("Response Submission Failed!");
-    }
-  });
-}
-
+import { Field, FormWithFields, Answer } from "@/types";
+import { loadForm, saveForm, submitAnswer } from "@/api/feedbackSystem";
 const FeedbackForm = () => {
   const courseOptions = ["Default","Advanced Programming", "Mathematics", "Software Architecture and Design", "English"];
   const [idForm, setIdForm] = useState(12);
@@ -304,28 +264,6 @@ const FeedbackForm = () => {
       </div>
     </div>
   );
-};
-
-export type Field = {
-  id_field: number;
-  title: string;
-  question: string;
-};
-
-export type FormWithFields = {
-  id_form: number;
-  course_name: string;
-  fields: Array<Field>;
-};
-
-export type Grade = {
-  id_field: number;
-  grade: number;
-};
-
-export type Answer = {
-  id_form: number;
-  grades: Grade[];
 };
 
 export default FeedbackForm;
