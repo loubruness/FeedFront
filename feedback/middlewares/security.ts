@@ -1,8 +1,11 @@
+import { Request, Response } from 'express';
+
 import jwt from 'jsonwebtoken';
 
 const { verify } = jwt;
 
-export async function verifyToken(request: { get: (arg0: string) => any; user_type: any; }, response: { status: (arg0: number) => { (): any; new(): any; json: { (arg0: { error: string; }): any; new(): any; }; }; }, next: () => void) {
+export async function verifyToken(request: Request, response: Response, next: () => void) : Promise<void> {
+    console.log('middleware');
     let token = request.get("Authorization");
     if (!!token && token.startsWith('Bearer ')) {
         token = token.slice(7);
@@ -18,17 +21,23 @@ export async function verifyToken(request: { get: (arg0: string) => any; user_ty
             const data = verify(token, secretKey);
 
             if(typeof data !== 'object') {
-                return response.status(401).json({error: 'Invalid token'});
+                response.status(401).json({error: 'Invalid token'});
             }
             
-            request.user_type = data.user_type;
+            if (typeof data === 'object' && 'user_type' in data) {
+                console.log(data);
+                request.body.user_type = (data as jwt.JwtPayload).user_type;
+            } else {
+                response.status(401).json({error: 'Invalid token'});
+                return;
+            }
             
             next();    
         }
         catch {
-            return response.status(401).json({error: 'Invalid token'});
+            response.status(401).json({error: 'Invalid token'});
         }
     } else {
-        return response.status(401).json({error: 'No token provided'});
+        response.status(401).json({error: 'No token provided'});
     }
 }
