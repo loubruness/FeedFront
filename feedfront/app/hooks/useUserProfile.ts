@@ -1,5 +1,7 @@
+import { ProfileResponse, fetchProfile } from '@/api/auth';
 import { useEffect, useState } from 'react';
-import { fetchUserProfile } from '../services/userService';
+
+// import { fetchUserProfile } from '../services/userService';
 
 export const useUserProfile = () => {
     const [email, setEmail] = useState<string>('');
@@ -14,10 +16,16 @@ export const useUserProfile = () => {
 
         try {
             const token = localStorage.getItem('token');
-            const data = await fetchUserProfile(token);
-            setEmail(data.email);
-            setFirstName(data.firstName);
-            setLastName(data.lastName);
+            console.log(token);
+            if (!token) {
+                throw new Error('No token found');
+            }
+            const data : ProfileResponse = await fetchProfile(token);
+            const info = data.result;
+            console.log(data);
+            setEmail(info.email);
+            setFirstName(info.firstname);
+            setLastName(info.lastname);
         } catch (error: unknown) {
             if (error instanceof Error) {
                 setErrorInfo(error.message);
@@ -32,6 +40,7 @@ export const useUserProfile = () => {
     useEffect(() => {
         loadUserData();
     }, []);
-
+    
+    console.log(email);
     return { email, firstName, lastName, errorInfo, loading };
 };

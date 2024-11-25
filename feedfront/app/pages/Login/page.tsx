@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 export default function Login() {
     const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
-    const { handleLogin, loading, error } = useLogin(() => router.push('/Dashboard'));
+    const { handleLogin, loading, error } = useLogin(() => router.push('Dashboard'));
 
     const router = useRouter();
 
