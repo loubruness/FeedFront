@@ -8,4 +8,6 @@ RUN npm install
 
 COPY . /app
 
-CMD ["node","app.js"]
+RUN npx tsc
+
+CMD ["node","build/app.js"]
