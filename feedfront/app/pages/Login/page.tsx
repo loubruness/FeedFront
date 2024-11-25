@@ -1,19 +1,18 @@
 "use client";
 
 import { ChangeEvent, FormEvent, useState } from 'react';
+import { LEGAL_MESSAGE, SUPPORT_PHONE } from '../../constants/auth';
 
 import Image from "next/image";
-import logo from '../assets/logo.png';
-import chouette from '../assets/chouette2.jpeg';
-import { useRouter } from 'next/navigation';
+import chouette from '../../assets/chouette2.jpeg';
+import logo from '../../assets/logo.png';
 import { useLogin } from '../../hooks/useLogin';
-import { SUPPORT_PHONE, LEGAL_MESSAGE } from '../../constants/auth';
-
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
     const [email, setEmail] = useState<string>('');
 	const [password, setPassword] = useState<string>('');
-    const { handleLogin, loading, error } = useLogin(() => router.push('/Login'));
+    const { handleLogin, loading, error } = useLogin(() => router.push('/Dashboard'));
 
     const router = useRouter();
 
