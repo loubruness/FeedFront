@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "standalone",
+  env: {
+    API_HOST: 'http://localhost:3000',
+  },
 };
 
 export default nextConfig;
