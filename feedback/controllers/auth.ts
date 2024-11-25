@@ -21,11 +21,12 @@ function createToken(user_id: number, user_role: string): string {
 async function fetchUserLogin(email: string, password: string) {
     const response = await fetch(`${EFREI_API_URL}/user/login`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "x-api-key" : "apikey" },
         body: JSON.stringify({ email, password }),
     });
 
     if (!response.ok) {
+        
         throw new Error(`Login failed with status ${response.status}`);
     }
 
@@ -34,6 +35,7 @@ async function fetchUserLogin(email: string, password: string) {
 
 async function login(request: Request, response: Response): Promise<void> {
     try {
+        console.log(request.body);
         const { email, password } = request.body;
         if (!email || !password) {
             response.status(400).json({ error: "Email and password are required" });
