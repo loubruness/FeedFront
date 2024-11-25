@@ -1,6 +1,5 @@
 import React from "react";
 import { Field } from "@/types";
-import { courseOptions } from "@/constants/feedback";
 
 interface AdminFieldsProps {
     fields: Field[];
@@ -8,6 +7,7 @@ interface AdminFieldsProps {
     deleteFieldHandler: (id: number) => void;
     addFieldHandler: () => void;
     setFormTitle: (title: string) => void;
+    courseOptions: string[];
     formTitle: string;
 }
 
@@ -17,6 +17,7 @@ const AdminFields: React.FC<AdminFieldsProps> = ({
     deleteFieldHandler,
     addFieldHandler,
     setFormTitle,
+    courseOptions,
     formTitle,
 }) => {
     return (

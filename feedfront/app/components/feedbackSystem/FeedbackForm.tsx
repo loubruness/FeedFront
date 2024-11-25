@@ -9,6 +9,8 @@ const FeedbackForm = () => {
         formTitle,
         fields,
         userRole,
+        isCreatingForm,
+        courseOptions,
         setUserRole,
         setFormTitle,
         addFieldHandler,
@@ -17,7 +19,7 @@ const FeedbackForm = () => {
         saveFormHandler,
         sendFormHandler,
         submitAnswerHandler,
-    } = useFeedbackForm(12);
+    } = useFeedbackForm();
 
     return (
         <div>
@@ -26,7 +28,7 @@ const FeedbackForm = () => {
 
             <div className="text-center mb-10">
                 <h1 className="text-4xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-400 text-transparent bg-clip-text">
-                    {userRole === "admin" ? "Create Survey" : "Give Feedback"}
+                    {userRole === "admin" ? isCreatingForm ? "Create Survey" : "Update Survey" : "Give Feedback"}
                 </h1>
             </div>
             {userRole === "admin" ? (
@@ -36,6 +38,7 @@ const FeedbackForm = () => {
                     deleteFieldHandler={deleteFieldHandler}
                     addFieldHandler={addFieldHandler}
                     setFormTitle={setFormTitle}
+                    courseOptions={courseOptions}
                     formTitle={formTitle}
                 />
             ) : (

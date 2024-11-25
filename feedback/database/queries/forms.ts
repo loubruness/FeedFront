@@ -30,7 +30,7 @@ export const getForms = async (): Promise<Form[]> => {
   }
 };
 
-const getFormById = async (id_form: number): Promise<Form> => {
+export const getFormById = async (id_form: number): Promise<Form> => {
   try {
     return (await db('forms').select('*').where('id_form', id_form))[0];
   }
@@ -64,10 +64,11 @@ export const getFormWithFields = async (id_form: number): Promise<FormWithFields
 
 export const createFormWithFields = async (form: FormWithFields): Promise<FormWithFields> => {
   try {
-    const { fields,id_form:undefined, ...formData } = form;
-    const [{id_form}] = await db('forms').insert(formData).returning('id_form');
-    const fieldsWithId = fields.map((field) => ({ id_form, id_field: undefined, ...field }));
-    await db('fields').insert(fieldsWithId);
+    const { fields, id_form: undefined, ...formData } = form;
+    const [{ id_form }] = await db('forms').insert(formData).returning('id_form');
+    const fieldsWithoutId = fields.map(({ id_field, ...rest }) => ({ ...rest, id_form }));
+    console.log('createFormWithFields', { fields: fieldsWithoutId, id_form, ...formData });
+    await db('fields').insert(fieldsWithoutId);
     return { ...form, id_form };
   }
   catch (error) {
@@ -79,7 +80,7 @@ export const updateFormWithFields = async (form: FormWithFields): Promise<FormWi
   try {
     const { fields, ...formData } = form;
     await db('forms').update(formData).where('id_form', form.id_form);
-    const fieldsWithId = fields.map((field) => ({ id_form: form.id_form, ...field }));
+    const fieldsWithId = fields.map((field) => ({ ...field, id_form: form.id_form }));
     await db('fields').where('id_form', form.id_form).del();
     await db('fields').insert(fieldsWithId);
     return form;
@@ -88,3 +89,12 @@ export const updateFormWithFields = async (form: FormWithFields): Promise<FormWi
     throw error;
   }
 }
+
+export const deleteForm = async (id_form: number): Promise<void> => {
+  try {
+    await db('forms').where('id_form', id_form).del();
+  }
+  catch (error) {
+    throw error;
+  }
+};

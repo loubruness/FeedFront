@@ -1,22 +1,60 @@
 import { useState, useEffect } from "react";
 import { Field, FormWithFields, Answer } from "@/types";
-import { loadForm, saveForm, submitAnswer } from "@/api/feedbackSystem";
+import { loadForm, createForm, updateForm, submitAnswer, getCourseOptions } from "@/api/feedbackSystem";
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export const useFeedbackForm = (initialIdForm: number) => {
-  const [idForm, setIdForm] = useState(initialIdForm);
+
+export const useFeedbackForm = () => {
+  const [idForm, setIdForm] = useState(1);
   const [formTitle, setFormTitle] = useState("");
+  const [loadedFormTitle, setLoadedFormTitle] = useState<string>("");
   const [fields, setFields] = useState<Field[]>([]);
   const [userRole, setUserRole] = useState("admin");
+  const [isCreatingForm, setIsCreatingForm] = useState(true);
+  const [courseOptions, setCourseOptions] = useState<string[]>([]);
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const getFormId = () => {
+    const urlId = searchParams.get("idForm") as number | null;
+    if (urlId) {
+      setIdForm(urlId);
+      setIsCreatingForm(false);
+    }
+    else {
+      setIsCreatingForm(true);
+    }
+  };
 
   const loadFormHandler = async () => {
     const data = await loadForm(idForm);
+    setLoadedFormTitle(data.course_name);
     setFormTitle(data.course_name);
     setFields(data.fields);
   };
 
-  const saveFormHandler = () => {
+  const loadCourseOptions = async () => {
+    const data = await getCourseOptions();
+    setCourseOptions([loadedFormTitle, ...data]);
+  }
+
+  const saveFormHandler = async () => {
+    if (isCreatingForm && (!formTitle || formTitle === "Default")) {
+      alert("Please select a course name for the form.");
+      return;
+    }
+    if (isCreatingForm && idForm === 0 && formTitle !== "Default") {
+      alert("You should note change the class name of the Default form.");
+    }
     const formToSave: FormWithFields = { id_form: idForm, course_name: formTitle, fields };
-    saveForm(formToSave);
+    if (isCreatingForm) {
+      const newForm = await createForm(formToSave);
+      router.push(`/pages/FeedbackSystem?idForm=${newForm.id_form}`);
+    }
+    else {
+      updateForm(formToSave);
+    }
   };
 
   const sendFormHandler = () => alert("Form Sent Successfully!");
@@ -68,14 +106,25 @@ export const useFeedbackForm = (initialIdForm: number) => {
   };
 
   useEffect(() => {
+    getFormId();
+  }, [searchParams]);
+
+  useEffect(() => {
     loadFormHandler();
+    console.log("idForm", idForm);
   }, [idForm]);
+
+  useEffect(() => {
+    loadCourseOptions();
+  }, [loadedFormTitle]);
 
   return {
     idForm,
     formTitle,
     fields,
     userRole,
+    isCreatingForm,
+    courseOptions,
     setUserRole,
     setFormTitle,
     addFieldHandler,
