@@ -24,9 +24,10 @@ export async function verifyToken(request: Request, response: Response, next: ()
                 response.status(401).json({error: 'Invalid token'});
             }
             
-            if (typeof data === 'object' && 'user_type' in data) {
+            if (typeof data === 'object' && 'user_role' in data) {
                 console.log(data);
-                request.body.user_type = (data as jwt.JwtPayload).user_type;
+                request.body.user_id = (data as jwt.JwtPayload).user_id;
+                request.body.user_role = (data as jwt.JwtPayload).user_role;
             } else {
                 response.status(401).json({error: 'Invalid token'});
                 return;

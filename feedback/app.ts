@@ -1,22 +1,22 @@
 import express, { NextFunction, Request, Response } from 'express';
 
 import authRoutes from './routes/auth';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import emailRoutes from './routes/email';
+import forms from './routes/forms';
 import hbs from 'nodemailer-handlebars';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
 import otherRoutes from './routes/verifyToken';
 import path from 'path';
+import profileRoutes from './routes/profile';
+import responses from './routes/responses';
 import {verifyToken} from './middlewares/security';
 
 const { sign } = jwt;
 
 dotenv.config();
-import { json } from 'body-parser';
-import forms from './routes/forms';
-import responses from './routes/responses';
-import cors from 'cors';
 
 const app = express();
 const PORT: number = 3001;
@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(cors({
     origin: '*', // Allow requests from this origin
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
-    allowedHeaders: ['Content-Type'], // Allow specific headers
+    allowedHeaders: ['Content-Type, Authorization'], // Allow specific headers
 }));
 
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
@@ -51,6 +51,8 @@ app.use(verifyToken);
 
 app.use('/other', otherRoutes);
 app.use('/email', emailRoutes);
+app.use('/forms', forms);
+app.use('/profile', profileRoutes);
 
 app.post('/deliver', async (req: Request, res: Response) => {
     let {recipient, subject, text, html, } = req.body;

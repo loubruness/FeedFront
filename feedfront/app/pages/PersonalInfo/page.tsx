@@ -34,9 +34,15 @@ export default function PersonalInfo() {
                             <p className="text-gray-500 mt-8">Loading...</p>
                         ) : (
                             <form className="mx-auto max-w-xs mt-14">
-                                <StaticInput value={email} placeholder="Email" disabled={true}/>
-                                <StaticInput value={firstName} placeholder="First Name" disabled={true}/>
-                                <StaticInput value={lastName} placeholder="Last Name" disabled={true}/>
+                                {email &&
+                                    <StaticInput value={email} placeholder="Email" disabled={true} />
+                                }
+                                {firstName && (
+                                    <StaticInput value={firstName} placeholder="First Name" disabled={true} />
+                                )}
+                                {lastName && (
+                                    <StaticInput value={lastName} placeholder="Last Name" disabled={true} />
+                                )}
                                 {errorInfo && <p className="text-red-500 mt-4">{errorInfo}</p>}
                             </form>
                         )}

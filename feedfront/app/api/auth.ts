@@ -9,9 +9,12 @@ export interface LoginResponse {
 }
 
 export interface ProfileResponse {
-    email : string;
-    name: string;
-    lastname : string;
+    info : string;
+    result: {
+        email: string;
+        firstname: string;
+        lastname: string;
+    };
 }
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
@@ -40,13 +43,13 @@ export const login = async (email: string, password: string): Promise<LoginRespo
     }
 };
 
-export const fetchProfile = async (token: string, iv : string, encryptRole : string): Promise<ProfileResponse> => {
-    const response = await fetch('http://localhost:3001/api/profile_page', {
+export const fetchProfile = async (token: string): Promise<ProfileResponse> => {
+    console.log(token);
+    const response = await fetch('http://localhost:3001/profile/getProfileInfos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
          },
-        body: JSON.stringify({ iv, encryptRole }),
     });
     if (!response.ok) throw new Error(await response.text());
     return response.json();
