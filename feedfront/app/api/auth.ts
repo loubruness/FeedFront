@@ -44,7 +44,6 @@ export const login = async (email: string, password: string): Promise<LoginRespo
 };
 
 export const fetchProfile = async (token: string): Promise<ProfileResponse> => {
-    console.log(token);
     const response = await fetch('http://localhost:3001/profile/getProfileInfos', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
