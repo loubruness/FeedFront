@@ -21,12 +21,12 @@ if (!EFREI_API_KEY) {
 
 /**
  * Generates a JSON Web Token for the user.
- * @param userId - The user's ID.
- * @param userRole - The user's role.
+ * @param user_id - The user's ID.
+ * @param user_role - The user's role.
  * @returns A JWT string.
  */
-function createToken(userId: number, userRole: string): string {
-    return sign({ userId, userRole }, SECRET_KEY, { expiresIn: '1h' });
+function createToken(user_id: number, user_role: string): string {
+    return sign({ user_id, user_role }, SECRET_KEY, { expiresIn: '1h' });
 }
 
 /**

@@ -1,8 +1,10 @@
+import { send, sendFormEmail } from '../controllers/email';
+
 import { Router } from 'express';
-import { send } from '../controllers/email';
 
 const router = Router();
 
 router.post("/send", send);
+router.post("/sendFormEmail", sendFormEmail);
 
 export default router;
