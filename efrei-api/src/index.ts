@@ -1,6 +1,5 @@
 import express, { Request, Response, Application } from "express";
 import userRoutes from "./routes/user";
-import studentRoutes from "./routes/student";
 
 const app: Application = express();
 const port = 8000;
@@ -14,7 +13,6 @@ app.get("/", (req: Request, res: Response) => {
 app.use(express.json());
 
 // Routes
-app.use("/student", studentRoutes);
 app.use("/user", userRoutes);
 
 app.listen(port, () => {
