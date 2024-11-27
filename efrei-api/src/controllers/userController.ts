@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import roles from "../util/roles";
 import { User } from "../util/user";
-import db from "../database/database";
+import database from "../database/database";
 import {
   getUserFromCredentials,
   getUserFromId,
@@ -10,8 +10,8 @@ import {
 /**
  * Handles user login by validating the provided email and password.
  *
- * @param req - The request object containing the login credentials in the body.
- * @param res - The response object used to send back the appropriate user information or an error message.
+ * @param request - The request object containing the login credentials in the body.
+ * @param response - The response object used to send back the appropriate user information or an error message.
  *
  * @remarks
  * This function searches for a user in the `usersList` with the provided email and password.
@@ -39,17 +39,17 @@ import {
  *   "message": "Invalid username or password"
  * }
  */
-export const login = (req: Request, res: Response) => {
+export const login = (request: Request, response: Response) => {
   // Get login credentials from the request body
-  const { email, password } = req.body;
+  const { email, password } = request.body;
 
   getUserFromCredentials(email, password).then((user: User) => {
     if (!user) {
-      res.status(401).json({ message: "Invalid username or password" });
+      response.status(401).json({ message: "Invalid username or password" });
       return;
     }
 
-    res.json({
+    response.json({
       id: user.id,
       firstname: user.firstname,
       lastname: user.lastname,
@@ -65,8 +65,8 @@ export const login = (req: Request, res: Response) => {
  * If the user is a student, the courses returned are the ones they are enrolled in.
  * If the user is a teacher, the courses returned are the ones they are teaching.
  *
- * @param req - The request object containing the user ID in the parameters.
- * @param res - The response object used to send back the user's courses or an error message.
+ * @param request - The request object containing the user ID in the parameters.
+ * @param response - The response object used to send back the user's courses or an error message.
  *
  * @remarks
  * - If the user is not found, a 404 status with a "User not found" message is returned.
@@ -75,22 +75,22 @@ export const login = (req: Request, res: Response) => {
  *
  * @returns The user's courses or an appropriate error message.
  */
-export const getUserCourses = (req: Request, res: Response) => {
+export const getUserCourses = (request: Request, response: Response) => {
   // Get the user from the id
-  getUserFromId(+req.params.id).then((user: User) => {
+  getUserFromId(+request.params.id).then((user: User) => {
     // If the user is not found
     if (!user) {
-      res.status(404).json({ message: "User not found" });
+      response.status(404).json({ message: "User not found" });
       return;
     }
 
     if (user.role === roles.ADMIN) {
-      res.status(403).json({ message: "Admins do not have courses" });
+      response.status(403).json({ message: "Admins do not have courses" });
       return;
     }
 
     // Return the user's courses
-    db("course")
+    database("course")
       .join(
         "efreiuser_course as student_courses",
         "course.id",
@@ -110,7 +110,7 @@ export const getUserCourses = (req: Request, res: Response) => {
         this.on("teacher_courses.efreiuser_id", "=", "teachers.id").andOn(
           "teachers.role",
           "=",
-          db.raw("'teacher'")
+          database.raw("'teacher'")
         );
       })
       .where("students.id", user.id)
@@ -118,16 +118,16 @@ export const getUserCourses = (req: Request, res: Response) => {
       .select([
         "course.id as course_id",
         "course.name as course_name",
-        db.raw(
+        database.raw(
           "json_agg(teachers.id) FILTER (WHERE teachers.id IS NOT NULL) as teacher_ids"
         ),
       ])
       .then((results: any) => {
-        res.json({ courses: results });
+        response.json({ courses: results });
       })
-      .catch((err: any) => {
-        console.error(err);
-        res
+      .catch((error: any) => {
+        console.error(error);
+        response
           .status(500)
           .json({ error: "An error occurred while fetching courses" });
       });
@@ -137,8 +137,8 @@ export const getUserCourses = (req: Request, res: Response) => {
 /**
  * Retrieves a user by their ID from the database and sends the user data as a JSON response.
  *
- * @param req - The request object, containing the user ID in the request parameters.
- * @param res - The response object, used to send the JSON response.
+ * @param request - The request object, containing the user ID in the request parameters.
+ * @param response - The response object, used to send the JSON response.
  *
  * @remarks
  * This function queries the "efreiuser" table in the database to find a user with the specified ID.
@@ -156,17 +156,17 @@ export const getUserCourses = (req: Request, res: Response) => {
  * //   "level": 3
  * // }
  */
-export const getUser = (req: Request, res: Response) => {
+export const getUser = (request: Request, response: Response) => {
   // Get the user from the id
-  getUserFromId(+req.params.id).then((user: User) => {
+  getUserFromId(+request.params.id).then((user: User) => {
     // If the user is not found
     if (!user) {
-      res.status(404).json({ message: "User not found" });
+      response.status(404).json({ message: "User not found" });
       return;
     }
 
     // If the user is found, return it.
-    res.json({
+    response.json({
       firstname: user.firstname,
       lastname: user.lastname,
       email: user.email,

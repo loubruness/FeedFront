@@ -1,20 +1,20 @@
 import express, { Request, Response, Application } from "express";
 import userRoutes from "./routes/user";
 
-const app: Application = express();
+const application: Application = express();
 const port = 8000;
 
 // Default route
-app.get("/", (req: Request, res: Response) => {
-  res.json({ name: "Mock Efrei API" });
+application.get("/", (request: Request, response: Response) => {
+  response.json({ name: "Mock Efrei API" });
 });
 
 // Middlewares
-app.use(express.json());
+application.use(express.json());
 
 // Routes
-app.use("/user", userRoutes);
+application.use("/user", userRoutes);
 
-app.listen(port, () => {
+application.listen(port, () => {
   console.log(`Server started and running on http://localhost:${port}/`);
 });
