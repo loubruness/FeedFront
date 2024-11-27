@@ -55,7 +55,6 @@ export const login = (request: Request, response: Response) => {
       lastname: user.lastname,
       email: user.email,
       role: user.role,
-      level: user.level,
     });
   });
 };

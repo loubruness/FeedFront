@@ -6,8 +6,7 @@ CREATE TABLE EfreiUser (
    lastname TEXT NOT NULL,
    email TEXT NOT NULL UNIQUE,
    password TEXT NOT NULL,
-   role VARCHAR(50) NOT NULL,
-   level VARCHAR(50)
+   role VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE Course (
@@ -42,10 +41,10 @@ VALUES ('Teacher2', 'TEACHER2', 'teacher2@efrei.fr', 'pass', 'teacher');
 
 -- Students
 
-INSERT INTO EfreiUser (firstname, lastname, email, password, role, level)
-VALUES ('Student', 'STUDENT', 'student@efrei.net', 'pass', 'student', 'P1');
-INSERT INTO EfreiUser (firstname, lastname, email, password, role, level)
-VALUES ('Student2', 'STUDENT2', 'student2@efrei.net', 'pass', 'student', 'I2');
+INSERT INTO EfreiUser (firstname, lastname, email, password, role)
+VALUES ('Student', 'STUDENT', 'student@efrei.net', 'pass', 'student');
+INSERT INTO EfreiUser (firstname, lastname, email, password, role)
+VALUES ('Student2', 'STUDENT2', 'student2@efrei.net', 'pass', 'student');
 
 -- Courses
 
