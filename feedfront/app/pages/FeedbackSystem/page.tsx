@@ -8,7 +8,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-blue-900 text-gray-900 flex justify-center items-baseline px-16 py-8">
       <Link href="Dashboard">
-        <button className="xl:mr-[12px] xl:-ml-[39px] sm:mr-0 sm:ml-0">
+        <button className="xl:mr-[45px] xl:-ml-[28px] sm:mr-0 sm:ml-0">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
