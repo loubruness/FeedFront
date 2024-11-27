@@ -1,7 +1,11 @@
 import { Request, Response } from "express";
 import roles from "../util/roles";
 import { User } from "../util/user";
-import db from "../util/database";
+import db from "../database/database";
+import {
+  getUserFromCredentials,
+  getUserFromId,
+} from "../database/queries/userQueries";
 
 /**
  * Handles user login by validating the provided email and password.
@@ -39,24 +43,21 @@ export const login = (req: Request, res: Response) => {
   // Get login credentials from the request body
   const { email, password } = req.body;
 
-  db("efreiuser")
-    .where({ email, password })
-    .first()
-    .then((user: User) => {
-      if (!user) {
-        res.status(401).json({ message: "Invalid username or password" });
-        return;
-      }
+  getUserFromCredentials(email, password).then((user: User) => {
+    if (!user) {
+      res.status(401).json({ message: "Invalid username or password" });
+      return;
+    }
 
-      res.json({
-        id: user.id,
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-        role: user.role,
-        level: user.level,
-      });
+    res.json({
+      id: user.id,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      role: user.role,
+      level: user.level,
     });
+  });
 };
 
 /**
@@ -76,64 +77,61 @@ export const login = (req: Request, res: Response) => {
  */
 export const getUserCourses = (req: Request, res: Response) => {
   // Get the user from the id
-  db("efreiuser")
-    .where({ id: +req.params.id })
-    .first()
-    .then((user: User) => {
-      // If the user is not found
-      if (!user) {
-        res.status(404).json({ message: "User not found" });
-        return;
-      }
+  getUserFromId(+req.params.id).then((user: User) => {
+    // If the user is not found
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
 
-      if (user.role === roles.ADMIN) {
-        res.status(403).json({ message: "Admins do not have courses" });
-        return;
-      }
+    if (user.role === roles.ADMIN) {
+      res.status(403).json({ message: "Admins do not have courses" });
+      return;
+    }
 
-      // Return the user's courses
-      db("course")
-        .join(
-          "efreiuser_course as student_courses",
-          "course.id",
-          "student_courses.course_id"
-        )
-        .join(
-          "efreiuser as students",
-          "student_courses.efreiuser_id",
-          "students.id"
-        )
-        .leftJoin(
-          "efreiuser_course as teacher_courses",
-          "course.id",
-          "teacher_courses.course_id"
-        )
-        .leftJoin("efreiuser as teachers", function (this: any) {
-          this.on("teacher_courses.efreiuser_id", "=", "teachers.id").andOn(
-            "teachers.role",
-            "=",
-            db.raw("'teacher'")
-          );
-        })
-        .where("students.id", user.id)
-        .groupBy("course.id", "course.name")
-        .select([
-          "course.id as course_id",
-          "course.name as course_name",
-          db.raw(
-            "json_agg(teachers.id) FILTER (WHERE teachers.id IS NOT NULL) as teacher_ids"
-          ),
-        ])
-        .then((results: any) => {
-          res.json({ courses: results });
-        })
-        .catch((err: any) => {
-          console.error(err);
-          res
-            .status(500)
-            .json({ error: "An error occurred while fetching courses" });
-        });
-    });
+    // Return the user's courses
+    db("course")
+      .join(
+        "efreiuser_course as student_courses",
+        "course.id",
+        "student_courses.course_id"
+      )
+      .join(
+        "efreiuser as students",
+        "student_courses.efreiuser_id",
+        "students.id"
+      )
+      .leftJoin(
+        "efreiuser_course as teacher_courses",
+        "course.id",
+        "teacher_courses.course_id"
+      )
+      .leftJoin("efreiuser as teachers", function (this: any) {
+        this.on("teacher_courses.efreiuser_id", "=", "teachers.id").andOn(
+          "teachers.role",
+          "=",
+          db.raw("'teacher'")
+        );
+      })
+      .where("students.id", user.id)
+      .groupBy("course.id", "course.name")
+      .select([
+        "course.id as course_id",
+        "course.name as course_name",
+        db.raw(
+          "json_agg(teachers.id) FILTER (WHERE teachers.id IS NOT NULL) as teacher_ids"
+        ),
+      ])
+      .then((results: any) => {
+        res.json({ courses: results });
+      })
+      .catch((err: any) => {
+        console.error(err);
+        res
+          .status(500)
+          .json({ error: "An error occurred while fetching courses" });
+      });
+  });
 };
 
 /**
@@ -160,21 +158,18 @@ export const getUserCourses = (req: Request, res: Response) => {
  */
 export const getUser = (req: Request, res: Response) => {
   // Get the user from the id
-  db("efreiuser")
-    .where({ id: +req.params.id })
-    .first()
-    .then((user: User) => {
-      // If the user is not found
-      if (!user) {
-        res.status(404).json({ message: "User not found" });
-        return;
-      }
+  getUserFromId(+req.params.id).then((user: User) => {
+    // If the user is not found
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
 
-      // If the user is found, return it.
-      res.json({
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-      });
+    // If the user is found, return it.
+    res.json({
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
     });
+  });
 };
