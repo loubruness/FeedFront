@@ -1,6 +1,8 @@
-import express, { Request, Response, Application } from "express";
-import userRoutes from "./routes/user";
+import express, { Application, Request, Response } from "express";
+
+import courseRoutes from "./routes/course";
 import studentRoutes from "./routes/student";
+import userRoutes from "./routes/user";
 
 const app: Application = express();
 const port = 8000;
@@ -16,6 +18,7 @@ app.use(express.json());
 // Routes
 app.use("/student", studentRoutes);
 app.use("/user", userRoutes);
+app.use("/course", courseRoutes);
 
 app.listen(port, () => {
   console.log(`Server started and running on http://localhost:${port}/`);
