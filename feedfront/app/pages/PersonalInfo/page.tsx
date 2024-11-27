@@ -10,6 +10,7 @@ export default function PersonalInfo() {
 
     return (
         <div className="min-h-screen bg-blue-900 text-gray-900 flex justify-center items-baseline">
+            {/* Navigation button to the dashboard */}
             <Link href="Dashboard">
                 <button className="xl:mr-[12px] xl:-ml-[39px] sm:mr-0 sm:ml-0">
                     <svg
@@ -24,12 +25,14 @@ export default function PersonalInfo() {
                     </svg>
                 </button>
             </Link>
+            {/* Personal Info component */}
             <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow-2xl sm:rounded-lg flex justify-center flex-1 shadow-[0_0px_64px_-12px_rgba(240,249,255,1)]">
                 <div className="lg:w-1/2 p-6 sm:p-12">
                     <div className="mt-12 flex flex-col items-center">
                         <h1 className="text-2xl xl:text-6xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-400 inline-block text-transparent bg-clip-text mb-5">
                             Your Profile
                         </h1>
+                        {/* Personal Data */}
                         {loading ? (
                             <p className="text-gray-500 mt-8">Loading...</p>
                         ) : (
@@ -46,6 +49,7 @@ export default function PersonalInfo() {
                                 {errorInfo && <p className="text-red-500 mt-4">{errorInfo}</p>}
                             </form>
                         )}
+                        {/* Legal Data */}
                         <Section
                             title="Additional Information"
                             content="This data is shared with us by your organization, EFREI. If you wish to make any demands or inquiries about this data, please refer directly to them."

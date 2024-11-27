@@ -5,16 +5,23 @@ import Link from "next/link";
 const AdminDashboard = () => {
   return (
     <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
+      {/* Main container for the Admin Dashboard with responsive grid layout */}
+
+      {/* Header Section */}
       <div className="relative flex flex-col bg-clip-border rounded-xl bg-white text-gray-700 shadow-md overflow-hidden xl:col-span-3">
         <div className="relative bg-clip-border rounded-xl overflow-hidden bg-transparent text-gray-700 shadow-none m-0 flex items-center justify-between p-6">
           <SharedWidget />
           <div className="flex items-center mt-4 gap-x-3">
+
+          {/* Action Buttons */}
             <button className="flex items-center justify-center w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-gradient-to-tr from-blue-400 to-sky-300 rounded-lg sm:w-auto gap-x-2 hover:bg-gradient-to-l from-blue-400 to-sky-300">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
               </svg>
               <span>All</span>
             </button>
+
+             {/* "Create" button with navigation to FeedbackSystem */}
             <Link href="./FeedbackSystem">
               <button className="flex items-center justify-center w-1/2 px-5 py-3 text-sm tracking-wide text-white transition-colors duration-200 bg-gradient-to-tr from-blue-600 to-indigo-400 rounded-lg sm:w-auto gap-x-2 hover:bg-gradient-to-l from-blue-600 to-indigo-400">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -27,30 +34,37 @@ const AdminDashboard = () => {
                     </clipPath>
                   </defs>
                 </svg>
-
                 <span>Create</span>
               </button></Link>
           </div>
         </div>
 
+        {/* Saved Surveys Table */}
         <div className="p-6 pt-0 pb-2 mt-5">
           <table className="w-full min-w-[640px] table-auto max-h-[1050px]">
+            
+            {/* Table Header */}
             <thead className="bg-gradient-to-l from-sky-300 to-indigo-400">
               <tr>
                 <th className="border-b border-blue-gray-50 py-3 px-6 text-left rounded-tl-xl">
-                  <p className="block antialiased font-sans text-[12px] font-bold uppercase text-blue-50">Draft Surveys</p>
+                  <p className="block antialiased font-sans text-[12px] font-bold uppercase text-blue-50">Saved Surveys</p>
                 </th>
                 <th className="border-b border-blue-gray-50 py-3 px-6 text-left">
                   <p className="block antialiased font-sans text-[12px] font-bold uppercase text-blue-50">End Date</p>
                 </th>
                 <th className="border-b border-blue-gray-50 py-3 px-6 text-left">
-                  <p className="block antialiased font-sans text-[12px] font-bold uppercase text-blue-50">Edit</p>
+                  <p className="block antialiased font-sans text-[12px] font-bold uppercase text-blue-50">Status</p>
+                </th>
+                <th className="border-b border-blue-gray-50 py-3 px-6 text-left">
+                  <p className="block antialiased font-sans text-[12px] font-bold uppercase text-blue-50">Access</p>
                 </th>
                 <th className="border-b border-blue-gray-50 py-3 px-4 text-left rounded-tr-xl">
                   <p className="block antialiased font-sans text-[12px] font-bold uppercase text-blue-50">Delete</p>
                 </th>
               </tr>
             </thead>
+
+            {/* Table Body */}
             <tbody>
               <tr>
                 <td className="py-3 px-5 border-b border-blue-gray-50">
@@ -64,10 +78,53 @@ const AdminDashboard = () => {
                   </div>
                 </td>
                 <td className="py-3 px-5 border-b border-blue-gray-50">
+                  <div className="w-10/12">
+                    <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">Draft</p>
+                  </div>
+                </td>
+                <td className="py-3 px-5 border-b border-blue-gray-50">
                   <Link href="./FeedbackSystem?idForm=1">
                     <button>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 hover:text-purple-400">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                      </svg>
+
+                    </button>
+                  </Link>
+                </td>
+                <td className="py-3 px-5 border-b border-blue-gray-50">
+                  <button
+                    className="text-sm font-semibold text-red-500 rounded-lg hover:bg-red-600 focus:outline-none hover:text-white"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td className="py-3 px-5 border-b border-blue-gray-50">
+                  <div className="gap-4 w-10/12">
+                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold">Advanced Programming</p>
+                  </div>
+                </td>
+                <td className="py-3 px-5 border-b border-blue-gray-50">
+                  <div className="w-10/12">
+                    <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">12/05/24</p>
+                  </div>
+                </td>
+                <td className="py-3 px-5 border-b border-blue-gray-50">
+                  <div className="w-10/12">
+                    <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">Finalized</p>
+                  </div>
+                </td>
+                <td className="py-3 px-5 border-b border-blue-gray-50">
+                  <Link href="./FeedbackSystem?idForm=1">
+                    <button>
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6 hover:text-purple-400">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                       </svg>
                     </button>
                   </Link>
@@ -86,6 +143,7 @@ const AdminDashboard = () => {
           </table>
         </div>
 
+        {/* Current Surveys Table */}
         <div className="p-6 pt-0 pb-2 mt-20">
           <table className="w-full min-w-[640px] table-auto max-h-[1050px]">
             <thead className="bg-gradient-to-l from-sky-300 to-indigo-400">
@@ -122,7 +180,7 @@ const AdminDashboard = () => {
                 <td className="py-3 px-5 border-b border-blue-gray-50">
                   <Link href="./FeedbackSystem">
                     <button>
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6  hover:text-green-400">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
                       </svg>
                     </button>
@@ -131,7 +189,7 @@ const AdminDashboard = () => {
 
                 <td className="py-3 px-5 border-b border-blue-gray-50">
                   <button aria-expanded="false" aria-haspopup="menu" id=":r2:" className="relative middle text-sky-500 none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-gray-700 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30" type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6  hover:text-green-400">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>
                   </button>
@@ -150,6 +208,7 @@ const AdminDashboard = () => {
           </table>
         </div>
 
+        {/* Past Surveys Table */}
         <div className="p-6 pt-0 pb-2 mt-20">
           <table className="w-full min-w-[640px] table-auto max-h-[1050px]">
             <thead className="bg-gradient-to-l from-sky-300 to-indigo-400">
@@ -182,7 +241,7 @@ const AdminDashboard = () => {
                 </td>
                 <td className="py-3 px-5 border-b border-blue-gray-50">
                   <button aria-expanded="false" aria-haspopup="menu" id=":r2:" className="relative middle text-sky-500 none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-gray-700 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30" type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6  hover:text-green-400">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>
                   </button>

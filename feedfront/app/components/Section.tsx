@@ -5,6 +5,7 @@ type SectionProps = {
 
 function Section({ title, content }: SectionProps) {
     return (
+        // Section component with title and content
         <div className="w-full flex-1 mt-16">
             <div className="my-12 border-b text-center">
                 <div className="leading-none px-2 inline-block text-lg text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2">

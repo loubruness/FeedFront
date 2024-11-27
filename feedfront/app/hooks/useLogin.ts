@@ -4,10 +4,12 @@ import { LoginResponse, login } from '../api/auth';
 
 import { useState } from 'react';
 
+// Custom hook for handling user login
 export const useLogin = (onSuccess: () => void) => {
     const [error, setError] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
+    // Handle user login
     const handleLogin = async (email: string, password: string) => {
         setLoading(true);
         setError('');
