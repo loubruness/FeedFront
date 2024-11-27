@@ -61,9 +61,6 @@ const StudentDashboard = () => {
                 <th className="border-b border-blue-gray-50 py-3 px-6 text-left">
                   <p className="block antialiased font-sans text-[12px] font-bold uppercase text-blue-50">End Date</p>
                 </th>
-                <th className="border-b border-blue-gray-50 py-3 px-6 text-left rounded-tr-xl">
-                  <p className="block antialiased font-sans text-[12px] font-bold uppercase text-blue-50">Launch</p>
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -77,15 +74,6 @@ const StudentDashboard = () => {
                   <div className="w-10/12">
                     <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">12/05/24</p>
                   </div>
-                </td>
-                <td className="py-3 px-5 border-b border-blue-gray-50">
-                <Link href="./FeedbackSystem">
-                  <button>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
-                    </svg>
-                  </button>
-                  </Link>
                 </td>
               </tr>
             </tbody>
