@@ -1,5 +1,7 @@
-import {getForms, getFormById, getFormWithFields, createFormWithFields, updateFormWithFields, deleteForm, updateForm } from '../database/queries/forms';
+import {createFormWithFields, deleteForm, getFormById, getFormWithFields, getForms, updateForm, updateFormWithFields} from '../database/queries/forms';
+
 import nodeShedul from 'node-schedule';
+import { sendFormToStudentsByCourseFunction } from './email';
 
 const courses = [
     {
@@ -172,6 +174,12 @@ async function sendFormAction(id_form: number) {
             updateForm({ ...form, end_date, status: 'current' });
             // Paupau tu peux send ici
 
+            const result = await sendFormToStudentsByCourseFunction(form.course_name, end_date);
+            
+            if(result !== 'Emails were sent successfully') {
+                console.log(`sendFormAction: An error occured while sending the emails!`);
+                return { error: `An error occured while sending the emails!` };
+            }
             
             console.log(`Form ${id_form} sent`);
             const job = nodeShedul.scheduleJob(form.end_date, async function () {
