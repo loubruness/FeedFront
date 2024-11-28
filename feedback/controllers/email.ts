@@ -213,8 +213,44 @@ async function sendFormToStudentsByCourse(req : Request, res : Response) : Promi
     }
 }
 
+async function sendFormToStudentsByCourseFunction(course_name : string, endDate : Date) : Promise<string> {
+    const id_course = await fetch(`${EFREI_API_URL}/course/getCourseId?name=${ course_name }`, {
+        method: "GET",
+        headers: { 
+            "Content-Type": "application/json", 
+            "x-api-key": EFREI_API_KEY 
+        },
+    });
+    if(!id_course) {
+        return("Course ID is required" );
+    }else {
+        const listStudents = await fetchStudentsByCourse(id_course);
+        if(listStudents.students.length === 0) {
+            return("No students found for this course");
+            return
+        }
+        const course : Course = await fetchInfoCourse(id_course);
+        var emailsSent = true;
+        listStudents.students.forEach(async student => {
+            const result = await sendFormEmailStudent(student.id, student.email, course.name, endDate.toISOString());
+            console.log(result);
+            if(result !== 'Message sent') {
+                emailsSent = false;
+                return("An error occured while sending the emails!");
+            }
+        });
+        if(emailsSent) {
+            return("Emails were sent successfully" );
+        }else{
+            return("An error occured while sending the emails!");
+        }
+    }
+}
+
+
 export {
     send,
     sendFormEmail,
-    sendFormToStudentsByCourse
+    sendFormToStudentsByCourse,
+    sendFormToStudentsByCourseFunction
 };

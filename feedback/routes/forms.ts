@@ -1,5 +1,5 @@
+import {createFormWithFieldsAction, deleteFormAction, finalizeFormAction, getCourseWithoutFormAction, getFormWithFieldsAction, getFormsAction, updateFormWithFieldsAction} from '../controllers/forms';
 import express, { Request, Response, Router } from 'express';
-import {getFormsAction, getFormWithFieldsAction, createFormWithFieldsAction, updateFormWithFieldsAction, finalizeFormAction, deleteFormAction, getCourseWithoutFormAction} from '../controllers/forms';
 
 const router = Router();
 

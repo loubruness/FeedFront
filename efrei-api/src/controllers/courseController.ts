@@ -16,3 +16,18 @@ export const getInfoCourse = (req: Request, res: Response) => {
         res.json({ name : course.name });
         });
 };
+
+export const getCourseId = (req: Request, res: Response) => {
+    const name = req.query.name;
+    db("course")
+        .where({ name: name })
+        .first()
+        .then((course: any) => {
+        if (!course) {
+            res.status(404).json({ message: "Course not found" });
+            return;
+        }
+    
+        res.json({ id_course : course.id });
+        });
+}
