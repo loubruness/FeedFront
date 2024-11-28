@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+// Section component
 function Section({ title, content }: { title: string; content: string }) {
     return (
         <div className="flex-grow mt-10">
@@ -19,22 +20,20 @@ function Section({ title, content }: { title: string; content: string }) {
     );
 }
 
-
+// Feedback Outro component
 export default function FeedbackOutro(): JSX.Element {
     return (
         <div className="min-h-screen bg-blue-900 text-gray-900 flex justify-center items-baseline">
-            <button aria-label="Go Back" className="xl:mr-3 xl:-ml-10 sm:mx-0">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="w-10 h-10">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                </svg>
-            </button>
             <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow-2xl sm:rounded-lg flex justify-center flex-1 shadow-[0_0px_64px_-12px_rgba(240,249,255,1)]">
                 <div className="lg:w-1/2 p-6 sm:p-12">
                     <div className="mt-12 flex flex-col items-center">
+                        {/* Title for the feedback outro */}
                         <h1 className="text-2xl xl:text-6xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-400 text-center text-transparent bg-clip-text mb-5">
                             Module Feedback
                         </h1>
+                        {/* Section for the feedback outro */}
                         <Section title="Conclusion" content={`Your answers have been successfully submitted !\n\n Thank you for taking the time to answer this questionnaire. If you have any additional questions please reach out to your training manager or student success representative.`} />
+                        {/* Navigation button to the dashboard */}
                         <Link href="../pages/Dashboard">
                             <button
                                 aria-label="Start Evaluation"

@@ -1,19 +1,20 @@
 import { ProfileResponse, fetchProfile } from '@/api/auth';
 import { useEffect, useState } from 'react';
 
-// import { fetchUserProfile } from '../services/userService';
-
 export const useUserProfile = () => {
+    // State variables
     const [email, setEmail] = useState<string>('');
     const [firstName, setFirstName] = useState<string>('');
     const [lastName, setLastName] = useState<string>('');
     const [errorInfo, setErrorInfo] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(true);
 
+    // Load user profile data
     const loadUserData = async () => {
         setErrorInfo('');
         setLoading(true);
 
+        // Fetch user profile data
         try {
             const token = localStorage.getItem('token');
             console.log(token);
@@ -37,6 +38,7 @@ export const useUserProfile = () => {
         }
     };
 
+    // Load user profile data on component mount
     useEffect(() => {
         loadUserData();
     }, []);

@@ -1,3 +1,4 @@
+// Description: Constants for feedback form.
 export const courseOptions = [
     "Default",
     "Advanced Programming",

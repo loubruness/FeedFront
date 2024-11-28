@@ -3,9 +3,11 @@ import * as userService from '../services/userService';
 
 jest.mock('../services/userService');
 
+// Mock the fetchUserProfile function
 describe('useUserProfile', () => {
     const mockFetchUserProfile = userService.fetchUserProfile as jest.Mock;
 
+    // Reset the mock before each test
     it('should initialize with default state', () => {
         const initialState = {
             email: '',
@@ -24,6 +26,7 @@ describe('useUserProfile', () => {
         expect(loading).toBe(initialState.loading);
     });
 
+    // Test the loadUserData function
     it('should load user profile data correctly', async () => {
         mockFetchUserProfile.mockResolvedValue({
           name: "",

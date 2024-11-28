@@ -32,7 +32,6 @@ app.use(cors({
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.send('Hello World');
 });
-app.use(cors());
 app.use('/forms', forms);
 app.use('/responses', responses);
 
