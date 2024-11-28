@@ -1,5 +1,5 @@
 -- INITIALIZE DATABASE SCHEMA
-
+CREATE TYPE status AS ENUM ('default', 'draft', 'finalized', 'current', 'past');
 CREATE TABLE user_app (
    Id SERIAL,
    hashed_password VARCHAR(50) NOT NULL,
@@ -38,6 +38,7 @@ CREATE TABLE forms (
    course_name VARCHAR(50) NOT NULL,
    end_date TIMESTAMP,
    Id_admin INT NOT NULL,
+   status status DEFAULT 'draft',
    PRIMARY KEY(Id_form),
    UNIQUE(course_name),
    FOREIGN KEY(Id_admin) REFERENCES admin(Id)

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Field, FormWithFields, Answer } from "@/types";
-import { loadForm, createForm, updateForm, submitAnswer, getCourseOptions } from "@/api/feedbackSystem";
+import { loadForm, createForm, updateForm, submitAnswer, getCourseOptions, finalizeForm } from "@/api/feedbackSystem";
 import { useRouter, useSearchParams } from 'next/navigation';
 
 
@@ -27,11 +27,16 @@ export const useFeedbackForm = () => {
     }
   };
 
-  const loadFormHandler = async () => {
-    const data = await loadForm(idForm);
-    setLoadedFormTitle(data.course_name);
-    setFormTitle(data.course_name);
-    setFields(data.fields);
+  const loadFormHandler = async () => {  
+    try {
+      const data = await loadForm(idForm);
+      setLoadedFormTitle(data.course_name);
+      setFormTitle(data.course_name);
+      setFields(data.fields);
+    } catch (error) {
+      alert("Failed to load the form "+idForm+". Redirecting to create page.");
+      router.push("./FeedbackSystem");
+    }
   };
 
   const loadCourseOptions = async () => {
@@ -57,7 +62,11 @@ export const useFeedbackForm = () => {
     }
   };
 
-  const sendFormHandler = () => alert("Form Sent Successfully!");
+  const sendFormHandler = () => {
+    if (confirm("Are you sure you want to send this form?")) {
+      finalizeForm(idForm);
+    }
+  }
 
   const submitAnswerHandler = () => {
     const scores = fields.map((q) => {
