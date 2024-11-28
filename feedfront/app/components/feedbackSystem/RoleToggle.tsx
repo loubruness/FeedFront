@@ -7,6 +7,7 @@ interface RoleToggleProps {
 
 const RoleToggle: React.FC<RoleToggleProps> = ({ userRole, setUserRole }) => {
     return (
+        // Role toggle dropdown
         <div className="mb-6 flex justify-end items-center">
             <label className="mr-4 font-bold text-gray-700">Switch Role:</label>
             <select value={userRole} onChange={(e) => setUserRole(e.target.value)}  className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">

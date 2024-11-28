@@ -86,6 +86,7 @@ export const useFeedbackForm = () => {
       grades: scores.map((s) => ({ id_field: s.id, grade: parseInt(s.score || "3") })),
     };
     submitAnswer(answer);
+    router.push("/pages/FeedbackSystemOutro");
   };
 
   const updateFieldHandler = (id: number, key: string, value: string) => {
