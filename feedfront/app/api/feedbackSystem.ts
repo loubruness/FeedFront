@@ -70,3 +70,7 @@ export const submitAnswer = async (response: Answer) => {
 export const getCourseOptions = async (): Promise<string[]> => {
   return await apiFetch("/forms/coursesWithoutForm");
 };
+
+export const getForms = async () => {
+  return await apiFetch("/forms");
+};
