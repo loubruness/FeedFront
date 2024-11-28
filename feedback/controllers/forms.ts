@@ -32,7 +32,7 @@ const courses = [
         name: "Chemistry",
         end_date: () => {
             const date = new Date();
-            date.setSeconds(date.getSeconds() + 40);
+            date.setMonth(date.getMonth() + 1);
             return date;
         }
     },
@@ -40,7 +40,7 @@ const courses = [
         name: "Biology",
         end_date: () => {
             const date = new Date();
-            date.setSeconds(date.getSeconds() + 50);
+            date.setMonth(date.getMonth() + 1);
             return date;
         }
     }
@@ -166,7 +166,9 @@ async function sendFormAction(id_form: number) {
         }
         const form = await getFormById(id_form);
         if (form) {
-            const end_date = new Date(form.end_date.getMonth() + response_delay);
+            const end_date = new Date()
+            end_date.setMonth(new Date(form.end_date).getMonth() + response_delay);
+            console.log(end_date);
             updateForm({ ...form, end_date, status: 'current' });
             // Paupau tu peux send ici
 
