@@ -144,6 +144,7 @@ export async function finalizeFormAction(request, response) {
                     await sendFormAction(id_form);
                 });
                 console.log(`Form ${id_form} finalized and scheduled to be sent the ${end_date}`);
+                console.log('all nodes scheduled job', nodeShedul.scheduledJobs);
                 response.status(200).json({ message: `Form ${id_form} finalized and scheduled to be sent the ${end_date}` });
             }
             else {
@@ -170,7 +171,7 @@ async function sendFormAction(id_form: number) {
         if (form) {
             const end_date = new Date()
             end_date.setMonth(new Date(form.end_date).getMonth() + response_delay);
-            console.log(end_date);
+            console.log('send date: ',end_date);
             updateForm({ ...form, end_date, status: 'current' });
             // Paupau tu peux send ici
 

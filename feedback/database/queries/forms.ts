@@ -105,6 +105,7 @@ export const updateFormWithFields = async (form: FormWithFields): Promise<FormWi
 
 export const deleteForm = async (id_form: number): Promise<void> => {
   try {
+    await db('fields').where('id_form', id_form).del();
     await db('forms').where('id_form', id_form).del();
   }
   catch (error) {

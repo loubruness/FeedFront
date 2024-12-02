@@ -74,3 +74,9 @@ export const getCourseOptions = async (): Promise<string[]> => {
 export const getForms = async () => {
   return await apiFetch("/forms");
 };
+
+export const deleteForm = async (id_form: number) => {
+  return await apiFetch(`/forms/delete/${id_form}`, {
+    method: "DELETE",
+  });
+}

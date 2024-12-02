@@ -27,7 +27,7 @@ router.put('/finalize/:id_form', (req: Request, res: Response) => {
     finalizeFormAction(req, res);
 });
 
-router.delete('/:id_form', (req: Request, res: Response) => {
+router.delete('/delete/:id_form', (req: Request, res: Response) => {
     deleteFormAction(req, res);
 });
 
