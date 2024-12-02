@@ -23,6 +23,42 @@ const courses = [
         }
     },
     {
+        name: "Test1",
+        end_date: () => 
+        {
+            const date = new Date();
+            date.setSeconds(date.getSeconds() + 20);
+            return date;
+        }
+    },
+    {
+        name: "Test2",
+        end_date: () => 
+        {
+            const date = new Date();
+            date.setSeconds(date.getSeconds() + 20);
+            return date;
+        }
+    },
+    {
+        name: "Test3",
+        end_date: () => 
+        {
+            const date = new Date();
+            date.setSeconds(date.getSeconds() + 20);
+            return date;
+        }
+    },
+    {
+        name: "Test4",
+        end_date: () => 
+        {
+            const date = new Date();
+            date.setSeconds(date.getSeconds() + 20);
+            return date;
+        }
+    },
+    {
         name: "Physics",
         end_date: () => {
             const date = new Date();
@@ -173,6 +209,8 @@ async function sendFormAction(id_form: number) {
             console.log('send date: ',end_date);
             updateForm({ ...form, end_date, status: 'current' });
             // Paupau tu peux send ici
+
+            console.log(`Form ${id_form} to be sent to students of course ${form.course_name}`);
 
             const result = await sendFormToStudentsByCourseFunction(form.course_name, end_date);
             
