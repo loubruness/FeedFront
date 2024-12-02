@@ -9,6 +9,7 @@ import { getUserRole } from "../../utils/roleUtils";
 const Dashboard = () => {
   // Get the user role (e.g., admin, student, teacher) from utility function
   const role = getUserRole();
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-indigo-500 from-5% via-blue-300 via-30% to-cyan-50 to-95%">

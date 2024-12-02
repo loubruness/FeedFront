@@ -16,25 +16,14 @@ export const useFeedbackForm = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const getFormId = () => {
-    const urlId = searchParams.get("idForm") as number | null;
-    if (urlId) {
-      setIdForm(urlId);
-      setIsCreatingForm(false);
-    }
-    else {
-      setIsCreatingForm(true);
-    }
-  };
-
-  const loadFormHandler = async () => {  
+  const loadFormHandler = async (id: number) => {
     try {
-      const data = await loadForm(idForm);
+      const data = await loadForm(id);
       setLoadedFormTitle(data.course_name);
       setFormTitle(data.course_name);
       setFields(data.fields);
     } catch (error) {
-      alert("Failed to load the form "+idForm+". Redirecting to create page.");
+      alert(`Failed to load the form ${id}. Redirecting to create page.`);
       router.push("./FeedbackSystem");
     }
   };
@@ -116,13 +105,17 @@ export const useFeedbackForm = () => {
   };
 
   useEffect(() => {
-    getFormId();
+    const urlId = searchParams.get("idForm");
+    if (urlId) {
+      setIdForm(parseInt(urlId));
+      setIsCreatingForm(false);
+      loadFormHandler(parseInt(urlId));
+    } else {
+      setIsCreatingForm(true);
+      loadFormHandler(idForm);
+    }
   }, [searchParams]);
 
-  useEffect(() => {
-    loadFormHandler();
-    console.log("idForm", idForm);
-  }, [idForm]);
 
   useEffect(() => {
     loadCourseOptions();

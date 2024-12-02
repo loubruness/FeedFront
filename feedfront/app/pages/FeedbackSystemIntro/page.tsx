@@ -1,5 +1,6 @@
+"use client";
 import Link from 'next/link';
-
+import { useSearchParams } from 'next/navigation';
 // Section component
 function Section({ title, content }: { title: string; content: string }) {
     return (
@@ -23,6 +24,10 @@ function Section({ title, content }: { title: string; content: string }) {
 
 // Feedback Introduction component
 export default function FeedbackIntro(): JSX.Element {
+    const searchParams = useSearchParams();
+    const idForm = searchParams.get('idForm');
+
+
     return (
         <div className="min-h-screen bg-blue-900 text-gray-900 flex justify-center items-baseline">
             {/* Navigation button to the dashboard */}
@@ -43,7 +48,7 @@ export default function FeedbackIntro(): JSX.Element {
                         <Section title="Welcome" content={`Your opinion is important ! You are invited to complete the evaluation of your modules and the learning experience offered by your teachers. \n \n Your comments will be greatly appreciated !`} />
                         <Section title="Reminder" content={`Your feedback and comments are 100% anonymized, and none of this information will be provided to third party organizations.`} />
                         <Section title="Disclaimer" content={`The information collected on this form is used by the school to improve its teaching services. \n\nThe survey concerns the modules of the current school year, the responses are treated anonymously. The results are communicated to teachers and the administration (still anonymously). \n \nThe data will be kept until the end of the current semester.`} />
-                        <Link href="../pages/FeedbackSystem">
+                        <Link href={`../pages/FeedbackSystem?idForm=${idForm}`}>
                             <button
                                 aria-label="Start Evaluation"
                                 className="mt-28 tracking-wide font-semibold bg-gradient-to-tl from-blue-500 to-indigo-500 text-gray-100 w-full min-w-[34rem] py-4 rounded-lg hover:bg-gradient-to-tr from-blue-500 to-indigo-500 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
