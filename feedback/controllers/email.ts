@@ -140,6 +140,13 @@ async function sendFormEmailStudent(student_id : number, student_email : string,
             subject: "Evaluation Form for " + course + " available",
             template: "welcome",
             context: templateData,
+            attachments: [
+                {
+                    filename: 'Logo.png', // Name of the image file
+                    path: path.join(__dirname, '../config/assets/Logo.png'), // Path to the image
+                    cid: 'image_cid' // The content ID to reference in the email
+                }
+            ]
         };
 
         const info = await transporter.sendMail(mailOptions);
