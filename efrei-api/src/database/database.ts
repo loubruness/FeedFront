@@ -1,6 +1,6 @@
 // Note: Knex uses a connection pool, so there is no need to use the singleton pattern.
 
-const db = require("knex")({
+const database = require("knex")({
   client: "pg",
   connection: {
     host: "school-database",
@@ -11,4 +11,4 @@ const db = require("knex")({
   },
 });
 
-export default db;
+export default database;

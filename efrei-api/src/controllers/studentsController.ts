@@ -1,14 +1,13 @@
 import { Request, Response } from "express";
 
-import db from "../util/database";
+import database from "../database/database";
 
 export const getAllStudents = (req: Request, res: Response) => {
   res.json({ students: ["Uncle Bob"] });
 };
 
-
 export const getStudentsByCourse = (req: Request, res: Response) => {
-  db("course")
+  database("course")
     .where({ id: +req.params.id })
     .first()
     .then((course: any) => {
@@ -17,7 +16,7 @@ export const getStudentsByCourse = (req: Request, res: Response) => {
         return;
       }
 
-      db("efreiuser")
+      database("efreiuser")
         .join(
           "efreiuser_course",
           "efreiuser.id",
@@ -36,4 +35,4 @@ export const getStudentsByCourse = (req: Request, res: Response) => {
             .json({ error: "An error occurred while fetching students" });
         });
     });
-}
+};

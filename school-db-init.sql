@@ -6,13 +6,13 @@ CREATE TABLE EfreiUser (
    lastname TEXT NOT NULL,
    email TEXT NOT NULL UNIQUE,
    password TEXT NOT NULL,
-   role VARCHAR(50) NOT NULL,
-   level VARCHAR(50)
+   role VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE Course (
    id SERIAL PRIMARY KEY,
-   name TEXT NOT NULL
+   name TEXT NOT NULL,
+   end_date TIMESTAMP
 );
 
 CREATE TABLE efreiuser_course (
@@ -42,23 +42,23 @@ VALUES ('Teacher2', 'TEACHER2', 'teacher2@efrei.fr', 'pass', 'teacher');
 
 -- Students
 
-INSERT INTO EfreiUser (firstname, lastname, email, password, role, level)
-VALUES ('Student', 'STUDENT', 'student@efrei.net', 'pass', 'student', 'P1');
-INSERT INTO EfreiUser (firstname, lastname, email, password, role, level)
-VALUES ('Student2', 'STUDENT2', 'student2@efrei.net', 'pass', 'student', 'I2');
+INSERT INTO EfreiUser (firstname, lastname, email, password, role)
+VALUES ('Student', 'STUDENT', 'student@efrei.net', 'pass', 'student');
+INSERT INTO EfreiUser (firstname, lastname, email, password, role)
+VALUES ('Student2', 'STUDENT2', 'student2@efrei.net', 'pass', 'student');
 
 -- Courses
 
-INSERT INTO Course (name)
-VALUES ('ST2APR - Advanced Programming (I3, I3-PRO - 2425S9)');
-INSERT INTO Course (name)
-VALUES ('ST2TST - Software Testing (I3, I3-PRO - 2425S9)');
-INSERT INTO Course (name)
-VALUES ('ST2SSA - Software Systems Architectures  (I3, I3-PRO - 2425S9)');
-INSERT INTO Course (name)
-VALUES ('SP201I - From the Atom to the Microchip (P1-INT - 2425S2)');
-INSERT INTO Course (name)
-VALUES ('SP106I - General Electricity (P1-INT - 2425S1)');
+INSERT INTO Course (name, end_date)
+VALUES ('ST2APR - Advanced Programming (I3, I3-PRO - 2425S9)', '2024-12-31');
+INSERT INTO Course (name, end_date)
+VALUES ('ST2TST - Software Testing (I3, I3-PRO - 2425S9)', '2024-11-30');
+INSERT INTO Course (name, end_date)
+VALUES ('ST2SSA - Software Systems Architectures  (I3, I3-PRO - 2425S9)', '2025-12-31');
+INSERT INTO Course (name, end_date)
+VALUES ('SP201I - From the Atom to the Microchip (P1-INT - 2425S2)', '2023-12-31');
+INSERT INTO Course (name, end_date)
+VALUES ('SP106I - General Electricity (P1-INT - 2425S1)', '2024-12-31');
 
 -- Assign courses to teachers
 
