@@ -1,33 +1,43 @@
 import { Request, Response } from "express";
+import {
+  getCourseFromId,
+  getCourseFromName,
+} from "../database/queries/courseQueries";
 
-import database from "../database/database";
+export const getInfoCourse = (request: Request, response: Response) => {
+  const id_course = request.query.id_course;
 
-export const getInfoCourse = (req: Request, res: Response) => {
-  const id_course = req.query.id_course;
-  database("course")
-    .where({ id: id_course })
-    .first()
-    .then((course: any) => {
-      if (!course) {
-        res.status(404).json({ message: "Course not found" });
-        return;
-      }
+  // Validate input
+  if (id_course === undefined) {
+    response.status(400).json({ message: "Missing id_course parameter" });
+    return;
+  }
 
-      res.json({ name: course.name });
-    });
+  getCourseFromId(+id_course).then((course: any) => {
+    if (!course) {
+      response.status(404).json({ message: "Course not found" });
+      return;
+    }
+
+    response.json({ name: course.name });
+  });
 };
 
-export const getCourseId = (req: Request, res: Response) => {
-    const name = req.query.name;
-    db("course")
-        .where({ name: name })
-        .first()
-        .then((course: any) => {
-        if (!course) {
-            res.status(404).json({ message: "Course not found" });
-            return;
-        }
-    
-        res.json({ id_course : course.id });
-        });
-}
+export const getCourseId = (request: Request, response: Response) => {
+  const name = request.query.name;
+
+  // Validate input
+  if (name === undefined) {
+    response.status(400).json({ message: "Missing name parameter" });
+    return;
+  }
+
+  getCourseFromName(name as string).then((course: any) => {
+    if (!course) {
+      response.status(404).json({ message: "Course not found" });
+      return;
+    }
+
+    response.json({ id_course: course.id });
+  });
+};
