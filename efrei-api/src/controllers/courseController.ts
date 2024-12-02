@@ -2,7 +2,14 @@ import { Request, Response } from "express";
 import {
   getCourseFromId,
   getCourseFromName,
+  getAllCourses as getAllCoursesDBQuery,
 } from "../database/queries/courseQueries";
+
+export const getAllCourses = (request: Request, response: Response) => {
+  getAllCoursesDBQuery().then((courses: any) => {
+    response.json({ courses });
+  });
+};
 
 export const getInfoCourse = (request: Request, response: Response) => {
   const id_course = request.query.id_course;
