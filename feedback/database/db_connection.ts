@@ -1,5 +1,5 @@
-import knex from 'knex';
 import dotenv from 'dotenv';
+import knex from 'knex';
 
 dotenv.config();
 
@@ -10,8 +10,9 @@ const db = knex({
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME,
-    port: parseInt(process.env.DB_PORT),
+    port: Number(process.env.DB_PORT),
   },
+  debug: true,
 });
 
 export { db };
