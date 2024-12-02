@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Field, FormWithFields, Answer } from "@/types";
 import { loadForm, createForm, updateForm, submitAnswer, getCourseOptions, finalizeForm } from "@/api/feedbackSystem";
 import { useRouter, useSearchParams } from 'next/navigation';
+import { getUserRole } from "@/utils/roleUtils";
 
 
 export const useFeedbackForm = () => {
@@ -10,20 +11,27 @@ export const useFeedbackForm = () => {
   const [loadedFormTitle, setLoadedFormTitle] = useState<string>("");
   const [fields, setFields] = useState<Field[]>([]);
   const [userRole, setUserRole] = useState("admin");
+  const [selectedRole, setSelectedRole] = useState("admin");
   const [isCreatingForm, setIsCreatingForm] = useState(true);
   const [courseOptions, setCourseOptions] = useState<string[]>([]);
+  const [formStatus, setFormStatus] = useState<string>("default");
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const loadFormHandler = async (id: number) => {
     try {
+      const role = getUserRole();
+      setUserRole(role);
+      setSelectedRole(role);
       const data = await loadForm(id);
       setLoadedFormTitle(data.course_name);
       setFormTitle(data.course_name);
       setFields(data.fields);
+      setFormStatus(data.status || "draft");
     } catch (error) {
       alert(`Failed to load the form ${id}. Redirecting to create page.`);
+      setIdForm(1);
       router.push("./FeedbackSystem");
     }
   };
@@ -51,9 +59,10 @@ export const useFeedbackForm = () => {
     }
   };
 
-  const sendFormHandler = () => {
+  const finalizeFormHandler = () => {
     if (confirm("Are you sure you want to send this form?")) {
       finalizeForm(idForm);
+      setFormStatus("finalized");
     }
   }
 
@@ -124,17 +133,19 @@ export const useFeedbackForm = () => {
   return {
     idForm,
     formTitle,
+    formStatus,
     fields,
     userRole,
+    selectedRole,
     isCreatingForm,
     courseOptions,
-    setUserRole,
+    setSelectedRole,
     setFormTitle,
     addFieldHandler,
     updateFieldHandler,
     deleteFieldHandler,
     saveFormHandler,
-    sendFormHandler,
+    finalizeFormHandler,
     submitAnswerHandler,
     setIdForm,
   };

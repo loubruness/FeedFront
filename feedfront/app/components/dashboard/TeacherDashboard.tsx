@@ -60,7 +60,7 @@ const TeacherDashboard = () => {
             </thead>
             <tbody>
               {/* Example row for a current survey */}
-              {forms.map((form) => ((form.status == "past") &&
+              {forms.map((form) => ((form.status == "current") &&
                 <tr key={form.id_form}>
                   <td className="py-3 px-5 border-b border-blue-gray-50">
                     <div className="gap-4 w-10/12">

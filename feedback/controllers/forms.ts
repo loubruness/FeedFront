@@ -85,7 +85,7 @@ export async function createFormWithFieldsAction(request, response) {
 
         const end_date = courses.find(course => course.name === request.body.course_name).end_date();
         console.log(end_date);
-        const id_admin = 11;
+        const id_admin = request.body?.user_id || 11;
         response.status(200).json(await createFormWithFields({ ...request.body, end_date, id_admin }));
     }
     catch (error) {
@@ -103,7 +103,7 @@ export async function updateFormWithFieldsAction(request, response) {
 
         const end_date = courses.find(course => course.name === request.body.course_name).end_date();
         console.log(request.body);
-        const id_admin = 11;
+        const id_admin = request.body?.user_id || 11;
         const db_form = await getFormById(request.params.id_form);
 
         if (db_form) {
@@ -144,7 +144,6 @@ export async function finalizeFormAction(request, response) {
                     await sendFormAction(id_form);
                 });
                 console.log(`Form ${id_form} finalized and scheduled to be sent the ${end_date}`);
-                console.log('all nodes scheduled job', nodeShedul.scheduledJobs);
                 response.status(200).json({ message: `Form ${id_form} finalized and scheduled to be sent the ${end_date}` });
             }
             else {

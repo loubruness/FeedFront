@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 export const useDashboard = () => {
   const [forms, setForms] = useState<Form[]>([]);
   const router = useRouter();
+  
   const deleteFormHandler = async (id: number) => {
     if (confirm("Are you sure you want to delete this form?")) {
       await deleteForm(id);
