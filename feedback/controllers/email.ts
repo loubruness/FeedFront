@@ -214,25 +214,32 @@ async function sendFormToStudentsByCourse(req : Request, res : Response) : Promi
 }
 
 async function sendFormToStudentsByCourseFunction(course_name : string, endDate : Date) : Promise<string> {
-    const id_course = await fetch(`${EFREI_API_URL}/course/getCourseId?name=${ course_name }`, {
+    console.log("course name :", course_name);
+    const response = await fetch(`${EFREI_API_URL}/course/getCourseId?name=${course_name}`, {
         method: "GET",
         headers: { 
             "Content-Type": "application/json", 
             "x-api-key": EFREI_API_KEY 
         },
     });
+    
+    const data = await response.json();
+    console.log("data", data);
+    const id_course = data.id_course;
+    console.log("id_course", id_course);
     if(!id_course) {
         return("Course ID is required" );
     }else {
         const listStudents = await fetchStudentsByCourse(id_course);
         if(listStudents.students.length === 0) {
             return("No students found for this course");
-            return
         }
+        console.log("listStudents", listStudents);
         const course : Course = await fetchInfoCourse(id_course);
+        console.log("course", course);
         var emailsSent = true;
         listStudents.students.forEach(async student => {
-            const result = await sendFormEmailStudent(student.id, student.email, course.name, endDate.toISOString());
+            const result = await sendFormEmailStudent(student.id, student.email, course_name, endDate.toISOString());
             console.log(result);
             if(result !== 'Message sent') {
                 emailsSent = false;
