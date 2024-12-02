@@ -1,8 +1,13 @@
+"use client";
 import React from "react";
 import SharedWidget from "./SharedDashboard"; // Importing the SharedWidget component
 import Link from "next/link"; // Importing Next.js Link for navigation
+import { useDashboard } from "@/hooks/useDashboard";
 
 const StudentDashboard = () => {
+  const {
+    forms,
+  } = useDashboard();
   return (
     <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
       {/* Main container: Responsive grid layout with one column by default, three columns for XL screens */}
@@ -39,42 +44,43 @@ const StudentDashboard = () => {
             </thead>
             <tbody>
               {/* Example row for a current survey */}
-              <tr>
-                {/* Cell for the survey name */}
-                <td className="py-3 px-5 border-b border-blue-gray-50">
-                  <div className="gap-4 w-10/12">
-                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold">Advanced Programming</p>
-                  </div>
-                </td>
-                {/* Cell for the survey end date */}
-                <td className="py-3 px-5 border-b border-blue-gray-50">
-                  <div className="w-10/12">
-                    <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">12/05/24</p>
-                  </div>
-                </td>
-                {/* Cell for the launch button */}
-                <td className="py-3 px-5 border-b border-blue-gray-50">
-                  <Link href="./FeedbackSystemIntro">
-                    {/* Button with an SVG icon to launch the survey */}
-                    <button>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="size-6 hover:text-green-400"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
-                        />
-                      </svg>
-                    </button>
-                  </Link>
-                </td>
-              </tr>
+              {forms.map((form) => ((form.status == "current") &&
+                <tr key={form.id_form}>
+                  {/* Cell for the survey name */}
+                  <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <div className="gap-4 w-10/12">
+                      <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold">{form.course_name}</p>
+                    </div>
+                  </td>
+                  {/* Cell for the survey end date */}
+                  <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <div className="w-10/12">
+                      <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">{new Date(form.end_date).toLocaleDateString()}</p>
+                    </div>
+                  </td>
+                  {/* Cell for the launch button */}
+                  <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <Link href={`./FeedbackSystemIntro?idForm=${form.id_form}`}>
+                      {/* Button with an SVG icon to launch the survey */}
+                      <button>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="size-6 hover:text-green-400"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z"
+                          />
+                        </svg>
+                      </button>
+                    </Link>
+                  </td>
+                </tr>))}
             </tbody>
           </table>
         </div>
@@ -95,20 +101,22 @@ const StudentDashboard = () => {
             </thead>
             <tbody>
               {/* Example row for a past survey */}
-              <tr>
-                {/* Cell for the survey name */}
-                <td className="py-3 px-5 border-b border-blue-gray-50">
-                  <div className="gap-4 w-10/12">
-                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold">Advanced Programming</p>
-                  </div>
-                </td>
-                {/* Cell for the survey end date */}
-                <td className="py-3 px-5 border-b border-blue-gray-50">
-                  <div className="w-10/12">
-                    <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">12/05/24</p>
-                  </div>
-                </td>
-              </tr>
+              {forms.map((form) => ((form.status == "past") &&
+                <tr key={form.id_form}>
+                  {/* Cell for the survey name */}
+                  <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <div className="gap-4 w-10/12">
+                      <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold">{form.course_name}</p>
+                    </div>
+                  </td>
+                  {/* Cell for the survey end date */}
+                  <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <div className="w-10/12">
+                      <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">{new Date(form.end_date).toLocaleDateString()}</p>
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

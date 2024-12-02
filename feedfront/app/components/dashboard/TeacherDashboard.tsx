@@ -1,7 +1,12 @@
+"use client";
 import React from "react";
 import SharedWidget from "./SharedDashboard"; // Importing the SharedWidget component
+import { useDashboard } from "@/hooks/useDashboard";
 
 const TeacherDashboard = () => {
+  const {
+    forms,
+  } = useDashboard();
   return (
     <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
       {/* Main container: Grid layout with one column by default, three columns for XL screens */}
@@ -55,41 +60,43 @@ const TeacherDashboard = () => {
             </thead>
             <tbody>
               {/* Example row for a current survey */}
-              <tr>
-                <td className="py-3 px-5 border-b border-blue-gray-50">
-                  <div className="gap-4 w-10/12">
-                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold">Advanced Programming</p>
-                  </div>
-                </td>
-                <td className="py-3 px-5 border-b border-blue-gray-50">
-                  <div className="w-10/12">
-                    <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">12/05/24</p>
-                  </div>
-                </td>
-                <td className="py-3 px-5 border-b border-blue-gray-50">
-                  <button
-                    aria-expanded="false"
-                    aria-haspopup="menu"
-                    className="relative middle text-sky-500 none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 w-10 max-w-[40px] h-10 rounded-lg hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30"
-                  >
-                    {/* SVG for download button */}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="size-6 hover:text-green-400"
+              {forms.map((form) => ((form.status == "past") &&
+                <tr key={form.id_form}>
+                  <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <div className="gap-4 w-10/12">
+                      <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold">{form.course_name}</p>
+                    </div>
+                  </td>
+                  <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <div className="w-10/12">
+                      <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">{new Date(form.end_date).toLocaleDateString()}</p>
+                    </div>
+                  </td>
+                  <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <button
+                      aria-expanded="false"
+                      aria-haspopup="menu"
+                      className="relative middle text-sky-500 none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 w-10 max-w-[40px] h-10 rounded-lg hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
-                      />
-                    </svg>
-                  </button>
-                </td>
-              </tr>
+                      {/* SVG for download button */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="size-6 hover:text-green-400"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
@@ -112,41 +119,43 @@ const TeacherDashboard = () => {
             </thead>
             <tbody>
               {/* Example row for a past survey */}
-              <tr>
-                <td className="py-3 px-5 border-b border-blue-gray-50">
-                  <div className="gap-4 w-10/12">
-                    <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold">Advanced Programming</p>
-                  </div>
-                </td>
-                <td className="py-3 px-5 border-b border-blue-gray-50">
-                  <div className="w-10/12">
-                    <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">12/05/24</p>
-                  </div>
-                </td>
-                <td className="py-3 px-5 border-b border-blue-gray-50">
-                  <button
-                    aria-expanded="false"
-                    aria-haspopup="menu"
-                    className="relative middle text-sky-500 none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 w-10 max-w-[40px] h-10 rounded-lg hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30"
-                  >
-                    {/* SVG for download button */}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="size-6 hover:text-green-400"
+              {forms.map((form) => ((form.status == "past") &&
+                <tr key={form.id_form}>
+                  <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <div className="gap-4 w-10/12">
+                      <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold">Advanced Programming</p>
+                    </div>
+                  </td>
+                  <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <div className="w-10/12">
+                      <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">12/05/24</p>
+                    </div>
+                  </td>
+                  <td className="py-3 px-5 border-b border-blue-gray-50">
+                    <button
+                      aria-expanded="false"
+                      aria-haspopup="menu"
+                      className="relative middle text-sky-500 none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 w-10 max-w-[40px] h-10 rounded-lg hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30"
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
-                      />
-                    </svg>
-                  </button>
-                </td>
-              </tr>
+                      {/* SVG for download button */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="size-6 hover:text-green-400"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+))}
             </tbody>
           </table>
         </div>
