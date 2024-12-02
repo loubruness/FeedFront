@@ -1,5 +1,5 @@
 -- INITIALIZE DATABASE SCHEMA
-
+CREATE TYPE status AS ENUM ('default', 'draft', 'finalized', 'current', 'past');
 CREATE TABLE user_app (
    Id SERIAL,
    hashed_password VARCHAR(50) NOT NULL,
@@ -38,6 +38,7 @@ CREATE TABLE forms (
    course_name VARCHAR(50) NOT NULL,
    end_date TIMESTAMP,
    Id_admin INT NOT NULL,
+   status status DEFAULT 'draft',
    PRIMARY KEY(Id_form),
    UNIQUE(course_name),
    FOREIGN KEY(Id_admin) REFERENCES admin(Id)
@@ -122,7 +123,7 @@ INSERT INTO admin (Id) VALUES (13);
 INSERT INTO admin (Id) VALUES (14);
 INSERT INTO admin (Id) VALUES (15);
 
-INSERT INTO forms (course_name, end_date, Id_admin) VALUES ('Default', '2021-12-31', 11);
+INSERT INTO forms (course_name, end_date, Id_admin, status) VALUES ('Default', '2021-12-31', 11, 'default');
 
 INSERT INTO fields (Id_form, title, question) VALUES (1, 'Satisfaction', 'Overall, I am satisfied with the lessons with this teacher');
 INSERT INTO fields (Id_form, title, question) VALUES (1, 'Availability', 'The teacher is available and listens to us');
