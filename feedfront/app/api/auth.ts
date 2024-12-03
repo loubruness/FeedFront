@@ -4,7 +4,7 @@ export interface LoginResponse {
     token: string;
     role: {
         iv: string;
-        encryptRole: string;
+        encryptedRole: string;
     };
 }
 

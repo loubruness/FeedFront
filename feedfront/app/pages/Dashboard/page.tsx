@@ -1,14 +1,28 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
+
 import AdminDashboard from "../../components/dashboard/AdminDashboard";
+import NavBar from "../../components/dashboard/NavBar";
 import StudentDashboard from "../../components/dashboard/StudentDashboard";
 import TeacherDashboard from "../../components/dashboard/TeacherDashboard";
-import NavBar from "../../components/dashboard/NavBar";
 import { getUserRole } from "../../utils/roleUtils";
 
 // Dashboard component handles rendering different dashboards based on user roles
 const Dashboard = () => {
+  const [role, setRole] = useState<string>("");
   // Get the user role (e.g., admin, student, teacher) from utility function
-  const role = getUserRole();
+  useEffect(() => {
+    // Only run this code on the client
+    const encryptedRole = localStorage.getItem("encryptedRole") || "";
+    const iv = localStorage.getItem("iv") || "";
+    try {
+      const userRole = getUserRole(encryptedRole, iv);
+      setRole(userRole);
+    } catch (error) {
+      console.error("Error decrypting role:", error);
+    }
+  }, []);
   
 
   return (
