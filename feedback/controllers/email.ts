@@ -1,18 +1,17 @@
 import { Class, Course } from '../util/Student';
 import { Request, Response } from 'express';
+import { sign, verify } from 'jsonwebtoken';
 
 import  Email from '../models/email2';
 import hbs from 'nodemailer-handlebars';
 import nodemailer from 'nodemailer';
 import path from 'path';
-import { sign } from 'jsonwebtoken';
 
 const EFREI_API_URL = process.env.EFREI_API_URL || "http://localhost:8000";
 const EFREI_API_KEY = process.env.EFREI_API_KEY || "";
 
 
 async function send(req: Request, res: Response) : Promise<void>{
-    console.log("in");
     console.log(req.body);
     if (!req.body) {
         res.status(400).send({ message: "Content cannot be empty!" });
@@ -47,6 +46,34 @@ function createTokenForm(user_id: number, user_type: string, endDate: string) : 
     return sign({user_id: user_id, user_type: user_type}, secretKeyForm, { expiresIn: expirationTime });
 }
 
+const verifyTokenForm = (token : string) => {
+    const secretKeyForm = process.env.SECRET_KEY_FORM;
+
+    if (!secretKeyForm) {
+        throw new Error("SECRET_KEY is not defined in the environment variables");
+    }
+
+    try {
+        return verify(token, secretKeyForm);
+    } catch (error) {
+        throw new Error("Invalid token");
+    }
+}
+
+const verifyToken = (req : Request, res : Response) => {
+    const token = req.query.token;
+    if (!token || typeof token !== 'string') {
+        res.status(400).json({ error: "Token is required" });
+        return;
+    }
+    const verified = verifyTokenForm(token);
+    if(verified) {
+        res.status(200).json({ message: "Token is valid" });
+    }
+    else{
+        res.status(400).json({ error: "Invalid token" });
+    }
+}
 
 async function sendFormEmail(req: Request, res: Response) : Promise<void> {
     const { recipient, subject, templateName, templateData } = req.body;
@@ -266,5 +293,6 @@ export {
     send,
     sendFormEmail,
     sendFormToStudentsByCourse,
-    sendFormToStudentsByCourseFunction
+    sendFormToStudentsByCourseFunction,
+    verifyToken
 };

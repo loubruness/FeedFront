@@ -121,7 +121,7 @@ export async function createFormWithFieldsAction(request, response) {
 
         const end_date = courses.find(course => course.name === request.body.course_name).end_date();
         console.log(end_date);
-        const id_admin = 11;
+        const id_admin = request.body?.user_id || 11;
         response.status(200).json(await createFormWithFields({ ...request.body, end_date, id_admin }));
     }
     catch (error) {
@@ -139,7 +139,7 @@ export async function updateFormWithFieldsAction(request, response) {
 
         const end_date = courses.find(course => course.name === request.body.course_name).end_date();
         console.log(request.body);
-        const id_admin = 11;
+        const id_admin = request.body?.user_id || 11;
         const db_form = await getFormById(request.params.id_form);
 
         if (db_form) {
@@ -206,7 +206,7 @@ async function sendFormAction(id_form: number) {
         if (form) {
             const end_date = new Date()
             end_date.setMonth(new Date(form.end_date).getMonth() + response_delay);
-            console.log(end_date);
+            console.log('send date: ',end_date);
             updateForm({ ...form, end_date, status: 'current' });
             // Paupau tu peux send ici
 

@@ -1,4 +1,7 @@
-import { getAllStudents, getStudentsByCourse } from "../controllers/studentsController";
+import {
+  getAllStudents,
+  getStudentsByCourse,
+} from "../controllers/studentsController";
 
 import { Router } from "express";
 import { authenticate } from "../middlewares/authentication";

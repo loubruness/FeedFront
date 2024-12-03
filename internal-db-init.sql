@@ -123,14 +123,12 @@ INSERT INTO admin (Id) VALUES (13);
 INSERT INTO admin (Id) VALUES (14);
 INSERT INTO admin (Id) VALUES (15);
 
-INSERT INTO forms (course_name, end_date, Id_admin) VALUES ('Default', '2021-12-31', 11);
+INSERT INTO forms (course_name, end_date, Id_admin, status) VALUES ('Default', '2021-12-31', 11, 'default');
 
 INSERT INTO fields (Id_form, title, question) VALUES (1, 'Satisfaction', 'Overall, I am satisfied with the lessons with this teacher');
 INSERT INTO fields (Id_form, title, question) VALUES (1, 'Availability', 'The teacher is available and listens to us');
 INSERT INTO fields (Id_form, title, question) VALUES (1, 'Clarity', 'The objectives of the module and the assessment methods are clearly stated');
 INSERT INTO fields (Id_form, title, question) VALUES (1, 'Resources', 'The educational resources are adapted');
 INSERT INTO fields (Id_form, title, question) VALUES (1, 'Coordination', 'Coordination of the module is good');
-
-INSERT INTO forms (course_name, end_date, Id_admin) VALUES ('Default', '2021-12-31', 11);
 
 -- ...

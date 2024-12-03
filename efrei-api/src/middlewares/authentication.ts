@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import authorizations from "../util/authorizations";
 
 // TODO: Move this somewhere else once the database is done
-const user_authorizations: Array<{
+const apiAuthorizationsFromKey: Array<{
   key: string;
   authorizations: Array<authorizations>;
 }> = [
@@ -12,21 +12,23 @@ const user_authorizations: Array<{
   },
 ];
 
-const authenticate = (...required_authorizations: Array<authorizations>) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    const apiKey = req.headers["x-api-key"];
+const authenticate = (
+  ...requiredRouteAuthorizations: Array<authorizations>
+) => {
+  return (request: Request, response: Response, next: NextFunction) => {
+    const apiKey = request.headers["x-api-key"];
 
-    const current_user_authorizations = user_authorizations.find(
+    const clientApiAuthorizations = apiAuthorizationsFromKey.find(
       (user) => user.key === apiKey
     )?.authorizations;
 
-    if (apiKey && current_user_authorizations) {
+    if (apiKey && clientApiAuthorizations) {
       // Authenticated
 
       // Check if the required permission is present
-      required_authorizations.forEach((authorization) => {
-        if (!current_user_authorizations.includes(authorization)) {
-          res.status(401).json({
+      requiredRouteAuthorizations.forEach((authorization) => {
+        if (!clientApiAuthorizations.includes(authorization)) {
+          response.status(401).json({
             message: "Unauthorized",
             missing_authorizations: authorization,
           });
@@ -34,10 +36,10 @@ const authenticate = (...required_authorizations: Array<authorizations>) => {
       });
 
       // For future reference, but shouldn't be used directly if possible
-      res.locals.authorizations = current_user_authorizations;
+      response.locals.authorizations = clientApiAuthorizations;
       next();
     } else {
-      res.status(401).json({
+      response.status(401).json({
         message: "Unauthenticated",
         reason: "The api key is missing or invalid.",
       });
