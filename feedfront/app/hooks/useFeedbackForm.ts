@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
-import { Field, FormWithFields, Answer } from "@/types";
-import { loadForm, createForm, updateForm, submitAnswer, getCourseOptions, finalizeForm } from "@/api/feedbackSystem";
+import { Answer, Field, FormWithFields } from "@/types";
+import { createForm, finalizeForm, getCourseOptions, loadForm, submitAnswer, updateForm } from "@/api/feedbackSystem";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getUserRole } from "@/utils/roleUtils";
 
+import { getUserRole } from "@/utils/roleUtils";
 
 export const useFeedbackForm = () => {
   const [idForm, setIdForm] = useState(1);
@@ -21,7 +21,9 @@ export const useFeedbackForm = () => {
 
   const loadFormHandler = async (id: number) => {
     try {
-      const role = getUserRole();
+      const encryptedRole = localStorage.getItem("encryptedRole") || "";
+      const iv = localStorage.getItem("iv") || "";
+      const role = getUserRole(encryptedRole, iv);
       setUserRole(role);
       setSelectedRole(role);
       const data = await loadForm(id);
@@ -29,6 +31,7 @@ export const useFeedbackForm = () => {
       setFormTitle(data.course_name);
       setFields(data.fields);
       setFormStatus(data.status || "draft");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       alert(`Failed to load the form ${id}. Redirecting to create page.`);
       setIdForm(1);

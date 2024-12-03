@@ -17,6 +17,8 @@ export const useLogin = (onSuccess: () => void) => {
             const response: LoginResponse = await login(email, password);
             const token = response.token;
             localStorage.setItem('token', token);
+            localStorage.setItem('encryptedRole', response.role.encryptedRole);
+            localStorage.setItem('iv', response.role.iv);
             console.log(localStorage.getItem('token'));
             onSuccess();
         } catch (err) {

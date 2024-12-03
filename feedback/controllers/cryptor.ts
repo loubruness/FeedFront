@@ -38,7 +38,7 @@ function encryptRole(role: string, iv: Buffer = randomBytes(16)): { iv: string; 
 function decryptRole(encryptedRole: string, iv: string): string {
     try {
         const encryptedText = Buffer.from(encryptedRole, 'hex');
-        const decipher = createDecipheriv(ALGORITHM, Buffer.from(SECRET_KEY), Buffer.from(iv, 'hex'));
+        const decipher = createDecipheriv(ALGORITHM, Buffer.from(SECRET_KEY_ROLE), Buffer.from(iv, 'hex'));
         let decrypted = decipher.update(encryptedText);
         decrypted = Buffer.concat([decrypted, decipher.final()]);
         return decrypted.toString('utf8');
