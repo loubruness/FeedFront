@@ -1,5 +1,5 @@
+import {createFormWithFieldsAction, deleteFormAction, finalizeFormAction, getCourseWithoutFormAction, getFormWithFieldsAction, getFormsAction, updateFormWithFieldsAction} from '../controllers/forms';
 import express, { Request, Response, Router } from 'express';
-import {getFormsAction, getFormWithFieldsAction, createFormWithFieldsAction, updateFormWithFieldsAction, deleteFormAction, getCourseWithoutFormAction} from '../controllers/forms';
 
 const router = Router();
 
@@ -19,11 +19,15 @@ router.post('/create', (req: Request, res: Response) => {
     createFormWithFieldsAction(req, res);
 });
 
-router.post('/update', (req: Request, res: Response) => {
+router.put('/update/:id_form', (req: Request, res: Response) => {
     updateFormWithFieldsAction(req, res);
 });
 
-router.delete('/:id_form', (req: Request, res: Response) => {
+router.put('/finalize/:id_form', (req: Request, res: Response) => {
+    finalizeFormAction(req, res);
+});
+
+router.delete('/delete/:id_form', (req: Request, res: Response) => {
     deleteFormAction(req, res);
 });
 

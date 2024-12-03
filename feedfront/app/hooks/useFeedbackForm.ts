@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Field, FormWithFields, Answer } from "@/types";
-import { loadForm, createForm, updateForm, submitAnswer, getCourseOptions } from "@/api/feedbackSystem";
+import { loadForm, createForm, updateForm, submitAnswer, getCourseOptions, finalizeForm } from "@/api/feedbackSystem";
 import { useRouter, useSearchParams } from 'next/navigation';
+import { getUserRole } from "@/utils/roleUtils";
 
 
 export const useFeedbackForm = () => {
@@ -10,28 +11,29 @@ export const useFeedbackForm = () => {
   const [loadedFormTitle, setLoadedFormTitle] = useState<string>("");
   const [fields, setFields] = useState<Field[]>([]);
   const [userRole, setUserRole] = useState("admin");
+  const [selectedRole, setSelectedRole] = useState("admin");
   const [isCreatingForm, setIsCreatingForm] = useState(true);
   const [courseOptions, setCourseOptions] = useState<string[]>([]);
+  const [formStatus, setFormStatus] = useState<string>("default");
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const getFormId = () => {
-    const urlId = searchParams.get("idForm") as number | null;
-    if (urlId) {
-      setIdForm(urlId);
-      setIsCreatingForm(false);
+  const loadFormHandler = async (id: number) => {
+    try {
+      const role = getUserRole();
+      setUserRole(role);
+      setSelectedRole(role);
+      const data = await loadForm(id);
+      setLoadedFormTitle(data.course_name);
+      setFormTitle(data.course_name);
+      setFields(data.fields);
+      setFormStatus(data.status || "draft");
+    } catch (error) {
+      alert(`Failed to load the form ${id}. Redirecting to create page.`);
+      setIdForm(1);
+      router.push("./FeedbackSystem");
     }
-    else {
-      setIsCreatingForm(true);
-    }
-  };
-
-  const loadFormHandler = async () => {
-    const data = await loadForm(idForm);
-    setLoadedFormTitle(data.course_name);
-    setFormTitle(data.course_name);
-    setFields(data.fields);
   };
 
   const loadCourseOptions = async () => {
@@ -57,7 +59,12 @@ export const useFeedbackForm = () => {
     }
   };
 
-  const sendFormHandler = () => alert("Form Sent Successfully!");
+  const finalizeFormHandler = () => {
+    if (confirm("Are you sure you want to send this form?")) {
+      finalizeForm(idForm);
+      setFormStatus("finalized");
+    }
+  }
 
   const submitAnswerHandler = () => {
     const scores = fields.map((q) => {
@@ -77,6 +84,7 @@ export const useFeedbackForm = () => {
       grades: scores.map((s) => ({ id_field: s.id, grade: parseInt(s.score || "3") })),
     };
     submitAnswer(answer);
+    router.push("/pages/FeedbackSystemOutro");
   };
 
   const updateFieldHandler = (id: number, key: string, value: string) => {
@@ -106,13 +114,17 @@ export const useFeedbackForm = () => {
   };
 
   useEffect(() => {
-    getFormId();
+    const urlId = searchParams.get("idForm");
+    if (urlId) {
+      setIdForm(parseInt(urlId));
+      setIsCreatingForm(false);
+      loadFormHandler(parseInt(urlId));
+    } else {
+      setIsCreatingForm(true);
+      loadFormHandler(idForm);
+    }
   }, [searchParams]);
 
-  useEffect(() => {
-    loadFormHandler();
-    console.log("idForm", idForm);
-  }, [idForm]);
 
   useEffect(() => {
     loadCourseOptions();
@@ -121,17 +133,19 @@ export const useFeedbackForm = () => {
   return {
     idForm,
     formTitle,
+    formStatus,
     fields,
     userRole,
+    selectedRole,
     isCreatingForm,
     courseOptions,
-    setUserRole,
+    setSelectedRole,
     setFormTitle,
     addFieldHandler,
     updateFieldHandler,
     deleteFieldHandler,
     saveFormHandler,
-    sendFormHandler,
+    finalizeFormHandler,
     submitAnswerHandler,
     setIdForm,
   };

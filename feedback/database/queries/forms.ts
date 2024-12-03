@@ -11,12 +11,14 @@ export type Form = {
   id_admin: number;
   course_name: string;
   end_date: Date;
+  status: string;
 };
 
 export type FormWithFields = {
   id_form: number;
   course_name: string;
   end_date: Date;
+  status: string;
   fields: Array<Field>;
 };
 
@@ -40,6 +42,16 @@ export const getFormById = async (id_form: number): Promise<Form> => {
 
 };
 
+export const updateForm = async (form: Form): Promise<Form> => {
+  try {
+    await db('forms').update(form).where('id_form', form.id_form);
+    return form;
+  }
+  catch (error) {
+    throw error;
+  }
+}
+
 const getFormFields = async (id_form: number): Promise<Field[]> => {
   try {
     return await db('fields').select('*').where('id_form', id_form);
@@ -48,6 +60,7 @@ const getFormFields = async (id_form: number): Promise<Field[]> => {
     throw error;
   }
 }
+
 
 export const getFormWithFields = async (id_form: number): Promise<FormWithFields> => {
   try {
@@ -92,6 +105,7 @@ export const updateFormWithFields = async (form: FormWithFields): Promise<FormWi
 
 export const deleteForm = async (id_form: number): Promise<void> => {
   try {
+    await db('fields').where('id_form', id_form).del();
     await db('forms').where('id_form', id_form).del();
   }
   catch (error) {

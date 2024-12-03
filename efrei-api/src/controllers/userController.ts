@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
-import roles from "../util/roles";
+
 import { User } from "../util/user";
 import database from "../database/database";
 import {
   getUserFromCredentials,
   getUserFromId,
 } from "../database/queries/userQueries";
+import roles from "../util/roles";
 
 /**
  * Handles user login by validating the provided email and password.
