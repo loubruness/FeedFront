@@ -131,6 +131,4 @@ INSERT INTO fields (Id_form, title, question) VALUES (1, 'Clarity', 'The objecti
 INSERT INTO fields (Id_form, title, question) VALUES (1, 'Resources', 'The educational resources are adapted');
 INSERT INTO fields (Id_form, title, question) VALUES (1, 'Coordination', 'Coordination of the module is good');
 
-INSERT INTO forms (course_name, end_date, Id_admin) VALUES ('Default', '2021-12-31', 11);
-
 -- ...
