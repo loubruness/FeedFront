@@ -12,6 +12,7 @@ import otherRoutes from './routes/verifyToken';
 import path from 'path';
 import profileRoutes from './routes/profile';
 import responses from './routes/responses';
+import report from './routes/report';
 import {verifyToken} from './middlewares/security';
 
 const { sign } = jwt;
@@ -35,6 +36,7 @@ app.get('/', (req: Request, res: Response, next: NextFunction) => {
 app.use(cors());
 app.use('/forms', forms);
 app.use('/responses', responses);
+app.use('/report', report);
 
 app.listen(PORT, (error?: Error) => {
     if (!error) {
