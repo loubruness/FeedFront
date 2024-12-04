@@ -49,6 +49,7 @@ CREATE TABLE fields (
    Id_field SERIAL,
    title VARCHAR(200) NOT NULL,
    question TEXT,
+   editable BOOLEAN DEFAULT TRUE,
    PRIMARY KEY(Id_form, Id_field),
    FOREIGN KEY(Id_form) REFERENCES forms(Id_form)
 );
@@ -125,10 +126,10 @@ INSERT INTO admin (Id) VALUES (15);
 
 INSERT INTO forms (course_name, end_date, Id_admin, status) VALUES ('Default', '2021-12-31', 11, 'default');
 
-INSERT INTO fields (Id_form, title, question) VALUES (1, 'Satisfaction', 'Overall, I am satisfied with the lessons with this teacher');
-INSERT INTO fields (Id_form, title, question) VALUES (1, 'Availability', 'The teacher is available and listens to us');
-INSERT INTO fields (Id_form, title, question) VALUES (1, 'Clarity', 'The objectives of the module and the assessment methods are clearly stated');
-INSERT INTO fields (Id_form, title, question) VALUES (1, 'Resources', 'The educational resources are adapted');
-INSERT INTO fields (Id_form, title, question) VALUES (1, 'Coordination', 'Coordination of the module is good');
+INSERT INTO fields (Id_form, title, question, editable) VALUES (1, 'Satisfaction', 'Overall, I am satisfied with the lessons with this teacher', FALSE);
+INSERT INTO fields (Id_form, title, question, editable) VALUES (1, 'Availability', 'The teacher is available and listens to us', FALSE);
+INSERT INTO fields (Id_form, title, question, editable) VALUES (1, 'Clarity', 'The objectives of the module and the assessment methods are clearly stated', FALSE);
+INSERT INTO fields (Id_form, title, question, editable) VALUES (1, 'Resources', 'The educational resources are adapted', FALSE);
+INSERT INTO fields (Id_form, title, question, editable) VALUES (1, 'Coordination', 'Coordination of the module is good', FALSE);
 
 -- ...

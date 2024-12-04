@@ -5,6 +5,7 @@ export type Field = {
   id_field: number;
   title: string;
   question: string;
+  editable?: boolean;
 };
 export type Form = {
   id_form: number;
