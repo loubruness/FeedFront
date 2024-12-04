@@ -35,7 +35,7 @@ CREATE TABLE token_used (
 
 CREATE TABLE forms (
    Id_form SERIAL,
-   course_name VARCHAR(50) NOT NULL,
+   course_name VARCHAR(100) NOT NULL,
    end_date TIMESTAMP,
    Id_admin INT NOT NULL,
    status status DEFAULT 'draft',
