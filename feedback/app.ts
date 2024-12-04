@@ -33,7 +33,6 @@ app.use(cors({
 app.get('/', (req: Request, res: Response, next: NextFunction) => {
     res.send('Hello World');
 });
-app.use('/forms', forms);
 app.use('/responses', responses);
 app.use('/report', report);
 
