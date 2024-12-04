@@ -28,6 +28,10 @@ export async function verifyToken(request: Request, response: Response, next: ()
                 console.log(data);
                 request.body.user_id = (data as jwt.JwtPayload).user_id;
                 request.body.user_role = (data as jwt.JwtPayload).user_role;
+                if(request.body.user_role != 'admin' && request.body.user_role != 'student' && request.body.user_role != 'teacher') {
+                    response.status(401).json({error: 'Unauthorized'});
+                    return;
+                }
             } else {
                 response.status(401).json({error: 'Invalid token'});
                 return;

@@ -65,7 +65,6 @@ async function getProfileInfos(request: Request, response: Response): Promise<vo
     try {
         const result = await fetchUserInfo(userId);
 
-        // Avoid mutation of the original result object
         const sanitizedResult = { ...result };
         if (userRole === "student") {
             sanitizedResult.firstname = "";
@@ -78,8 +77,6 @@ async function getProfileInfos(request: Request, response: Response): Promise<vo
         });
     } catch (error: any) {
         console.error(`Error fetching user info for userId=${userId}, userRole=${userRole}:`, error.message);
-        
-        // More descriptive error response
         if (error.message.includes("Failed to fetch")) {
             response.status(502).json({ error: "Unable to fetch user information from EFREI API" });
         } else {
