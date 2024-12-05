@@ -105,7 +105,7 @@ export const useFeedbackForm = () => {
       const newId = fields.length ? fields[fields.length - 1].id_field + 1 : 1;
       setFields([
         ...fields,
-        { id_field: newId, title: `Question ${newId}`, question: "Enter your question here..." },
+        { id_field: newId, title: `Question ${newId}`, question: "Enter your question here...", editable: true },
       ]);
     }
   };

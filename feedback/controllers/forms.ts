@@ -4,6 +4,7 @@ import {
     getFormById,
     getFormWithFields,
     getForms,
+    getCoursesForms,
     updateForm,
     updateFormWithFields
 } from '../database/queries/forms';
@@ -30,8 +31,18 @@ const DELETE_DELAY = 6; // Delay for deletion in months
  */
 export async function getFormsAction(request, response) {
     try {
-        const forms = await getForms();
-        response.status(200).json(forms);
+        const { user_id, user_role } = request.body;
+        if (user_role === 'admin') {
+            const forms = await getForms();
+            response.status(200).json(forms);
+        }
+        else {
+            const courses = await fetchUserCoursesAction(user_id);
+            const courseNames = courses.map(course => course.name);
+            const forms = await getCoursesForms(courseNames);
+            response.status(200).json(forms);
+        }
+
     } catch (error) {
         console.error("Error in getFormsAction:", error);
         response.status(500).json({ error: 'Failed to fetch forms' });
@@ -65,7 +76,8 @@ export async function getFormWithFieldsAction(request, response) {
  */
 export async function createFormWithFieldsAction(request, response) {
     try {
-        const { course_name, user_id } = request.body;
+        const { course_name } = request.body;
+        const { user_role, user_id, ...restForm} = request.body;
 
         if (!course_name) {
             return response.status(400).json({ error: 'course_name is required' });
@@ -79,7 +91,7 @@ export async function createFormWithFieldsAction(request, response) {
 
         const end_date = course.end_date;
         const id_admin = user_id || 11; // Default admin ID
-        const form = await createFormWithFields({ ...request.body, end_date, id_admin });
+        const form = await createFormWithFields({ ...restForm, end_date, id_admin });
 
         response.status(201).json(form);
     } catch (error) {
@@ -243,6 +255,7 @@ export async function getCoursesNamesWithoutFormAction(request, response) {
 
 /**
  * Fetches courses from the EFREI API.
+ * @returns The list of all courses.
  */
 async function fetchCoursesAction(): Promise<Course[]> {
     try {
@@ -255,6 +268,26 @@ async function fetchCoursesAction(): Promise<Course[]> {
     } catch (error) {
         console.error("Error in fetchCoursesAction:", error);
         throw new Error("Failed to fetch courses from EFREI API");
+    }
+}
+/**
+ * Fetches user courses from the EFREI API.
+ * @param user_id  The user ID.
+ * @returns  The list of user courses.
+ */
+async function fetchUserCoursesAction(user_id: number): Promise<Course[]> {
+    try {
+        const response = await fetch(`${EFREI_API_URL}/user/${user_id}/courses`, {
+            headers: { "x-api-key": EFREI_API_KEY }
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to fetch user courses, status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data.courses;
+    } catch (error) {
+        console.error("Error in fetchUserCoursesAction:", error);
+        throw new Error("Failed to fetch user courses from EFREI API");
     }
 }
 

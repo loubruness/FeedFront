@@ -106,11 +106,11 @@ INSERT INTO user_app (hashed_password) VALUES ('1234');
 INSERT INTO user_app (hashed_password) VALUES ('1234');
 INSERT INTO user_app (hashed_password) VALUES ('1234');
 
-INSERT INTO student (Id, email) VALUES (1, 'arthur@mail.com');
-INSERT INTO student (Id, email) VALUES (2, 'pauline@mail.com');
-INSERT INTO student (Id, email) VALUES (3, 'lou@mail.com');
-INSERT INTO student (Id, email) VALUES (4, 'hugo@mail.com');
-INSERT INTO student (Id, email) VALUES (5, 'asma@mail.com');
+INSERT INTO student (Id, email) VALUES (11, 'arthur@mail.com');
+INSERT INTO student (Id, email) VALUES (12, 'pauline@mail.com');
+INSERT INTO student (Id, email) VALUES (13, 'lou@mail.com');
+INSERT INTO student (Id, email) VALUES (14, 'hugo@mail.com');
+INSERT INTO student (Id, email) VALUES (15, 'asma@mail.com');
 
 INSERT INTO teacher (Id, name, lastname) VALUES (6, 'michel', 'dupont');
 INSERT INTO teacher (Id, name, lastname) VALUES (7, 'jean', 'martin');
@@ -118,13 +118,13 @@ INSERT INTO teacher (Id, name, lastname) VALUES (8, 'pierre', 'durand');
 INSERT INTO teacher (Id, name, lastname) VALUES (9, 'luc', 'dubois');
 INSERT INTO teacher (Id, name, lastname) VALUES (10, 'marie', 'bernard');
 
-INSERT INTO admin (Id) VALUES (11);
-INSERT INTO admin (Id) VALUES (12);
-INSERT INTO admin (Id) VALUES (13);
-INSERT INTO admin (Id) VALUES (14);
-INSERT INTO admin (Id) VALUES (15);
+INSERT INTO admin (Id) VALUES (1);
+INSERT INTO admin (Id) VALUES (2);
+INSERT INTO admin (Id) VALUES (3);
+INSERT INTO admin (Id) VALUES (4);
+INSERT INTO admin (Id) VALUES (5);
 
-INSERT INTO forms (course_name, end_date, Id_admin, status) VALUES ('Default', '2021-12-31', 11, 'default');
+INSERT INTO forms (course_name, end_date, Id_admin, status) VALUES ('Default', '2021-12-31', 1, 'default');
 
 INSERT INTO fields (Id_form, title, question, editable) VALUES (1, 'Satisfaction', 'Overall, I am satisfied with the lessons with this teacher', FALSE);
 INSERT INTO fields (Id_form, title, question, editable) VALUES (1, 'Availability', 'The teacher is available and listens to us', FALSE);

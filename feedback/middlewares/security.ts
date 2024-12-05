@@ -25,7 +25,7 @@ export async function verifyToken(request: Request, response: Response, next: ()
             }
             
             if (typeof data === 'object' && 'user_role' in data) {
-                console.log(data);
+                // console.log(data);
                 request.body.user_id = (data as jwt.JwtPayload).user_id;
                 request.body.user_role = (data as jwt.JwtPayload).user_role;
             } else {

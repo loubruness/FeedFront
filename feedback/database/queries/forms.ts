@@ -37,6 +37,21 @@ export const getForms = async (): Promise<Form[]> => {
 };
 
 /**
+ * Fetch all forms associated with a specific course.
+ * @param courseName - The name of the course.
+ * @returns A list of forms for the course.
+ * @throws Error if the database query fails.
+ */
+export const getCoursesForms = async (courseNames: string[]): Promise<Form[]> => {
+  try {
+    return await db('forms').select('*').whereIn('course_name', courseNames).whereIn('status', ['current','past']);
+  } catch (error) {
+    console.error("Error fetching forms:", error);
+    throw new Error("Could not fetch forms.");
+  }
+}
+
+/**
  * Fetch a specific form by its ID.
  * @param id_form - The ID of the form to fetch.
  * @returns The form with the given ID.
