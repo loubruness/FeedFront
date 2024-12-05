@@ -27,13 +27,22 @@ export const login = async (email: string, password: string): Promise<LoginRespo
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => null);
-            const errorMessage = errorData?.message || 'Failed to login';
-            throw new Error(errorMessage);
+            if(response.status === 401) {
+                const errorMessage = errorData?.message || 'Invalid email or password';
+                throw new Error(errorMessage);
+            }else if(response.status === 500) {
+                const errorMessage = errorData?.message || 'An internal server error occurred during login';
+                throw new Error(errorMessage);
+            }else{
+                throw new Error('An unexpected error occurred during login');
+            }
         }
 
-        return await response.json();
+        const data = await response.json();
+        return data as LoginResponse;
     } catch (err: unknown) {
         console.error('Login API Error:', err);
+
 
         if (err instanceof Error) {
             throw new Error(err.message || 'An unexpected error occurred during login');

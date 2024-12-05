@@ -8,11 +8,10 @@ import forms from './routes/forms';
 import hbs from 'nodemailer-handlebars';
 import jwt from 'jsonwebtoken';
 import nodemailer from 'nodemailer';
-import otherRoutes from './routes/verifyToken';
 import path from 'path';
 import profileRoutes from './routes/profile';
-import responses from './routes/responses';
 import report from './routes/report';
+import responses from './routes/responses';
 import {verifyToken} from './middlewares/security';
 
 const { sign } = jwt;
@@ -47,10 +46,9 @@ app.listen(PORT, (error?: Error) => {
 
 app.use('/auth', authRoutes);
 
-// middleware for verifying token
+// middleware for verifying token : all routes below this line will require a token
 app.use(verifyToken);
 
-app.use('/other', otherRoutes);
 app.use('/email', emailRoutes);
 app.use('/forms', forms);
 app.use('/profile', profileRoutes);

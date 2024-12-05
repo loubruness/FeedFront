@@ -2,7 +2,6 @@ import { Class, Course } from '../util/Student';
 import { Request, Response } from 'express';
 import { sign, verify } from 'jsonwebtoken';
 
-import  Email from '../models/email2';
 import hbs from 'nodemailer-handlebars';
 import nodemailer from 'nodemailer';
 import path from 'path';
@@ -10,7 +9,13 @@ import path from 'path';
 const EFREI_API_URL = process.env.EFREI_API_URL || "http://localhost:8000";
 const EFREI_API_KEY = process.env.EFREI_API_KEY || "";
 
-
+/**
+ * Creates the token used for the evaluation form.
+ * @param user_id - The identifier of the student.
+ * @param user_type - The type of the user (student).
+ * @param endDate - The end date for the evaluation form.
+ * @returns The token, throws an error if token could not be created
+ */
 function createTokenForm(user_id: number, user_type: string, endDate: string) : string {
     const secretKeyForm = process.env.SECRET_KEY_FORM;
 
@@ -22,6 +27,11 @@ function createTokenForm(user_id: number, user_type: string, endDate: string) : 
     return sign({user_id: user_id, user_type: user_type}, secretKeyForm, { expiresIn: expirationTime });
 }
 
+/**
+ * Verifies the token used for the evaluation form.
+ * @param token - The token to verify.
+ * @returns The decoded token if valid, otherwise throws an error.
+ */
 const verifyTokenForm = (token : string) => {
     const secretKeyForm = process.env.SECRET_KEY_FORM;
 
@@ -36,6 +46,11 @@ const verifyTokenForm = (token : string) => {
     }
 }
 
+/**
+ * Verifies the token provided in the request query.
+ * @param req - The request object.
+ * @param res - The response object.
+ */
 const verifyToken = (req : Request, res : Response) => {
     const token = req.query.token;
     if (!token || typeof token !== 'string') {
@@ -51,6 +66,14 @@ const verifyToken = (req : Request, res : Response) => {
     }
 }
 
+/**
+ * Sends an evaluation form email to a student.
+ * @param student_id - The ID of the student.
+ * @param student_email - The email address of the student.
+ * @param course - The name of the course.
+ * @param endDate - The end date for the evaluation form.
+ * @returns A promise that resolves to a message indicating the result of the email sending process.
+ */
 async function sendFormEmailStudent(student_id : number, student_email : string, course : string, endDate : string) : Promise<string> {
 
     const transporter = nodemailer.createTransport({
@@ -112,7 +135,11 @@ async function sendFormEmailStudent(student_id : number, student_email : string,
     }
 }
 
-
+/**
+ * Fetches students by course ID.
+ * @param id_course - The ID of the course.
+ * @returns A promise that resolves to a Class object containing the list of students.
+ */
 async function fetchStudentsByCourse(id_course) : Promise<Class> {
     const response = await fetch(`${EFREI_API_URL}/student/getStudentsByCourse/${ id_course }`, {
         method: "GET",
@@ -174,6 +201,13 @@ async function sendFormToStudentsByCourse(req : Request, res : Response) : Promi
     }
 }
 
+
+/**
+ * Sends evaluation forms to students of a specific course.
+ * @param course_name - The name of the course.
+ * @param endDate - The end date for the evaluation form.
+ * @returns A promise that resolves to a message indicating the result of the email sending process.
+ */
 async function sendFormToStudentsByCourseFunction(course_name : string, endDate : Date) : Promise<string> {
     console.log("course name :", course_name);
     const response = await fetch(`${EFREI_API_URL}/course/getCourseId?name=${course_name}`, {

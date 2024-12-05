@@ -4,6 +4,11 @@ import jwt from 'jsonwebtoken';
 
 const { verify } = jwt;
 
+/**
+ * Verifies the token used for authentication.
+ * @param token - The token to verify.
+ * @returns Goes onto the next function if the token is valid, otherwise throws an error.
+ */
 export async function verifyToken(request: Request, response: Response, next: () => void) : Promise<void> {
     console.log('middleware');
     let token = request.get("Authorization");
@@ -21,19 +26,19 @@ export async function verifyToken(request: Request, response: Response, next: ()
             const data = verify(token, secretKey);
 
             if(typeof data !== 'object') {
-                response.status(401).json({error: 'Invalid token'});
+                response.status(401).json({error: 'Invalid token : wrong type of data provided'});
             }
             
-            if (typeof data === 'object' && 'user_role' in data) {
+            if (typeof data === 'object' && 'user_role' in data && 'user_id' in data) {
                 console.log(data);
                 request.body.user_id = (data as jwt.JwtPayload).user_id;
                 request.body.user_role = (data as jwt.JwtPayload).user_role;
                 if(request.body.user_role != 'admin' && request.body.user_role != 'student' && request.body.user_role != 'teacher') {
-                    response.status(401).json({error: 'Unauthorized'});
+                    response.status(401).json({error: 'Unauthorized : wrong user role'});
                     return;
                 }
             } else {
-                response.status(401).json({error: 'Invalid token'});
+                response.status(401).json({error: 'Invalid token : wrong data provided'});
                 return;
             }
             

@@ -59,6 +59,33 @@ const courses = [
         }
     },
     {
+        name: "Test5",
+        end_date: () => 
+        {
+            const date = new Date();
+            date.setSeconds(date.getSeconds() + 20);
+            return date;
+        }
+    },
+    {
+        name: "Test6",
+        end_date: () => 
+        {
+            const date = new Date();
+            date.setSeconds(date.getSeconds() + 20);
+            return date;
+        }
+    },
+    {
+        name: "Test7",
+        end_date: () => 
+        {
+            const date = new Date();
+            date.setSeconds(date.getSeconds() + 20);
+            return date;
+        }
+    },
+    {
         name: "Physics",
         end_date: () => {
             const date = new Date();
