@@ -117,7 +117,7 @@ export const getUserCourses = (request: Request, response: Response) => {
       .groupBy("course.id", "course.name")
       .select([
         "course.id as course_id",
-        "course.name as course_name",
+        "course.name as name",
         database.raw(
           "json_agg(teachers.id) FILTER (WHERE teachers.id IS NOT NULL) as teacher_ids"
         ),

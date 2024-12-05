@@ -1,4 +1,4 @@
-import {createFormWithFieldsAction, deleteFormAction, finalizeFormAction, getCourseWithoutFormAction, getFormWithFieldsAction, getFormsAction, updateFormWithFieldsAction} from '../controllers/forms';
+import {createFormWithFieldsAction, deleteFormAction, finalizeFormAction, getCoursesNamesWithoutFormAction, getFormWithFieldsAction, getFormsAction, updateFormWithFieldsAction} from '../controllers/forms';
 import express, { Request, Response, Router } from 'express';
 
 const router = Router();
@@ -8,7 +8,7 @@ router.get('/', (req: Request, res: Response) => {
 });
 
 router.get('/coursesWithoutForm', (req: Request, res: Response) => {
-    getCourseWithoutFormAction(req, res);
+    getCoursesNamesWithoutFormAction(req, res);
 });
 
 router.get('/:id_form', (req: Request, res: Response) => {
