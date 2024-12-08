@@ -14,8 +14,8 @@ describe('useLogin Hook', () => {
 
     it('handles successful login', async () => {
         const mockOnSuccess = jest.fn();
-        const mockLogin = jest.spyOn(auth, 'login').mockResolvedValue({ info :"ook", token: 'fake-token' , role: { iv: '123', encryptRole: 'Test Role' } });
-        const mockFetchProfile = jest.spyOn(auth, 'fetchProfile').mockResolvedValue({ email: 'test@efrei.fr', name : 'Test', lastname : 'User' });
+        const mockLogin = jest.spyOn(auth, 'login').mockResolvedValue({ info :"ook", token: 'fake-token' , role: { iv: '123', encryptedRole: 'Test Role' } });
+        const mockFetchProfile = jest.spyOn(auth, 'fetchProfile').mockResolvedValue({ info : "user fetched successfully", result : {email: 'test@efrei.fr', firstname : 'Test', lastname : 'User' }});
 
         const { handleLogin } = useLogin(mockOnSuccess);
 
