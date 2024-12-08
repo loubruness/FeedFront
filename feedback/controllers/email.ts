@@ -1,11 +1,11 @@
 import { Class, Course } from '../util/Student';
 import { Request, Response } from 'express';
 import { sign, verify } from 'jsonwebtoken';
+import { storeTokenForm, verifyTokenUsed } from '../database/queries/email';
 
 import hbs from 'nodemailer-handlebars';
 import nodemailer from 'nodemailer';
 import path from 'path';
-import { verifyTokenUsed } from '../database/queries/email';
 
 const EFREI_API_URL = process.env.EFREI_API_URL || "http://localhost:8000";
 const EFREI_API_KEY = process.env.EFREI_API_KEY || "";
@@ -36,15 +36,11 @@ function createTokenForm(user_id: number, user_type: string, endDate: string) : 
 const verifyTokenForm = (token : string) => {
     const secretKeyForm = process.env.SECRET_KEY_FORM;
 
-    console.log("verifyTokenForm");
-    console.log(token);
-
     if (!secretKeyForm) {
         throw new Error("SECRET_KEY is not defined in the environment variables");
     }
 
     try {
-        console.log(verify(token, secretKeyForm));
         return verify(token, secretKeyForm);
     } catch (error) {
         throw new Error("Invalid token");
@@ -57,9 +53,7 @@ const verifyTokenForm = (token : string) => {
  * @returns A boolean indicating whether the token was already used.
  */
 const verifyTokenAlreadyUsed = async (token : string) => {
-    console.log(token);
     const alreadyUsedToken = await verifyTokenUsed(token);
-    console.log("alreadyUsed : ", alreadyUsedToken);
     if(alreadyUsedToken != null) {
         return true;
     }
@@ -81,8 +75,6 @@ const verifyToken = async (req : Request, res : Response) => {
     }
     const verified = verifyTokenForm(token);
     const alreadyUsed = await verifyTokenAlreadyUsed(token);
-    console.log("alreadyUsed : ", alreadyUsed);
-    console.log(verified != null && !alreadyUsed);
     if(verified != null && !alreadyUsed) {
         res.status(200).json({ message: "Token is valid" });
     }
@@ -113,6 +105,8 @@ async function sendFormEmailStudent(student_id : number, student_email : string,
     });
 
     const token = createTokenForm(student_id, "student", endDate);
+
+    storeTokenForm(student_id, id_form, token);
     
     const link = "http://localhost:3000/pages/FeedbackSystemIntro?idForm=" + id_form +"&token=" + token;
     const date = new Date(endDate).toLocaleDateString();
@@ -181,6 +175,11 @@ async function fetchStudentsByCourse(id_course) : Promise<Class> {
     return response.json();
 }
 
+/**
+ * Fetchs the information of a specific course.
+ * @param id_course - The identifier of the course.
+ * @returns A promise that resolves to all the information needed of a course.
+ */
 async function fetchInfoCourse(id_course) : Promise<Course> {
     const response = await fetch(`${EFREI_API_URL}/course/getInfoCourse?id_course=${ id_course }`, {
         method: "GET",
@@ -197,6 +196,12 @@ async function fetchInfoCourse(id_course) : Promise<Course> {
     return response.json();
 }   
 
+/**
+ * Sends evaluation forms to students of a specific course.
+ * @param course_name - The name of the course.
+ * @param endDate - The end date for the evaluation form.
+ * @returns A promise that resolves to a message indicating the result of the email sending process.
+ */
 async function sendFormToStudentsByCourse(req : Request, res : Response) : Promise<void> {
     const id_course = req.body.id_course;
     if(!id_course) {
@@ -212,7 +217,6 @@ async function sendFormToStudentsByCourse(req : Request, res : Response) : Promi
         var emailsSent = true;
         listStudents.students.forEach(async student => {
             const result = await sendFormEmailStudent(student.id, student.email, course.name, "2024-12-31T23:59:59Z", 1);
-            console.log(result);
             if(result !== 'Message sent') {
                 emailsSent = false;
                 res.status(500).json({ message: "An error occured while sending the emails!" });
@@ -234,7 +238,6 @@ async function sendFormToStudentsByCourse(req : Request, res : Response) : Promi
  * @returns A promise that resolves to a message indicating the result of the email sending process.
  */
 async function sendFormToStudentsByCourseFunction(course_name : string, endDate : Date, id_form : number) : Promise<string> {
-    console.log("course name :", course_name);
     const response = await fetch(`${EFREI_API_URL}/course/getCourseId?name=${course_name}`, {
         method: "GET",
         headers: { 
@@ -244,9 +247,7 @@ async function sendFormToStudentsByCourseFunction(course_name : string, endDate 
     });
     
     const data = await response.json();
-    console.log("data", data);
     const id_course = data.id_course;
-    console.log("id_course", id_course);
     if(!id_course) {
         return("Course ID is required" );
     }else {
@@ -254,13 +255,10 @@ async function sendFormToStudentsByCourseFunction(course_name : string, endDate 
         if(listStudents.students.length === 0) {
             return("No students found for this course");
         }
-        console.log("listStudents", listStudents);
         const course : Course = await fetchInfoCourse(id_course);
-        console.log("course", course);
         var emailsSent = true;
         listStudents.students.forEach(async student => {
             const result = await sendFormEmailStudent(student.id, student.email, course_name, endDate.toISOString(), id_form);
-            console.log(result);
             if(result !== 'Message sent') {
                 emailsSent = false;
                 return("An error occured while sending the emails!");

@@ -13,19 +13,23 @@ export const useLogin = (onSuccess: () => void) => {
     const handleLogin = async (email: string, password: string) => {
         setLoading(true);
         setError('');
-        try {
-            const response: LoginResponse = await login(email, password);
-            const token = response.token;
-            localStorage.setItem('token', token);
-            localStorage.setItem('encryptedRole', response.role.encryptedRole);
-            localStorage.setItem('iv', response.role.iv);
-            console.log(localStorage.getItem('token'));
-            onSuccess();
-        } catch (err) {
-            console.log("error: ", err);
-            setError(err instanceof Error ? err.message : 'An error occurred');
-        } finally {
+        if(email === '' || password === ''){
+            setError('Email and password are required');
             setLoading(false);
+        }else{
+            try {
+                const response: LoginResponse = await login(email, password);
+                const token = response.token;
+                localStorage.setItem('token', token);
+                localStorage.setItem('encryptedRole', response.role.encryptedRole);
+                localStorage.setItem('iv', response.role.iv);
+                onSuccess();
+            } catch (err) {
+                console.log("error: ", err);
+                setError(err instanceof Error ? err.message : 'An error occurred');
+            } finally {
+                setLoading(false);
+            }
         }
     };
 
