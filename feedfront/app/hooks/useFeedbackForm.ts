@@ -82,9 +82,13 @@ export const useFeedbackForm = () => {
       return;
     }
 
+    console.log(searchParams.get("token"));
+    const token = searchParams.get("token");
+
     const answer: Answer = {
       id_form: idForm,
       grades: scores.map((s) => ({ id_field: s.id, grade: parseInt(s.score || "3") })),
+      token : token || "",
     };
     submitAnswer(answer);
     router.push("/pages/FeedbackSystemOutro");

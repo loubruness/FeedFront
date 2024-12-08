@@ -187,7 +187,7 @@ async function sendFormAction(id_form: number) {
         end_date.setMonth(end_date.getMonth() + RESPONSE_DELAY);
 
         await updateForm({ ...form, end_date, status: 'current' });
-        await sendFormToStudentsByCourseFunction(form.course_name, end_date);
+        await sendFormToStudentsByCourseFunction(form.course_name, end_date, id_form);
 
         nodeSchedule.scheduleJob(end_date, async () => {
             await closeFormAction(id_form);

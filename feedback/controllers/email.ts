@@ -5,6 +5,7 @@ import { sign, verify } from 'jsonwebtoken';
 import hbs from 'nodemailer-handlebars';
 import nodemailer from 'nodemailer';
 import path from 'path';
+import { verifyTokenUsed } from '../database/queries/email';
 
 const EFREI_API_URL = process.env.EFREI_API_URL || "http://localhost:8000";
 const EFREI_API_KEY = process.env.EFREI_API_KEY || "";
@@ -35,11 +36,15 @@ function createTokenForm(user_id: number, user_type: string, endDate: string) : 
 const verifyTokenForm = (token : string) => {
     const secretKeyForm = process.env.SECRET_KEY_FORM;
 
+    console.log("verifyTokenForm");
+    console.log(token);
+
     if (!secretKeyForm) {
         throw new Error("SECRET_KEY is not defined in the environment variables");
     }
 
     try {
+        console.log(verify(token, secretKeyForm));
         return verify(token, secretKeyForm);
     } catch (error) {
         throw new Error("Invalid token");
@@ -47,18 +52,38 @@ const verifyTokenForm = (token : string) => {
 }
 
 /**
- * Verifies the token provided in the request query.
+ * Verifies the token provided in the request query was not already used.
+ * @param token - The token to verify.
+ * @returns A boolean indicating whether the token was already used.
+ */
+const verifyTokenAlreadyUsed = async (token : string) => {
+    console.log(token);
+    const alreadyUsedToken = await verifyTokenUsed(token);
+    console.log("alreadyUsed : ", alreadyUsedToken);
+    if(alreadyUsedToken != null) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+/**
+ * Verifies the token provided in the request query is valid and was not already used.
  * @param req - The request object.
  * @param res - The response object.
  */
-const verifyToken = (req : Request, res : Response) => {
+const verifyToken = async (req : Request, res : Response) => {
     const token = req.query.token;
     if (!token || typeof token !== 'string') {
         res.status(400).json({ error: "Token is required" });
         return;
     }
     const verified = verifyTokenForm(token);
-    if(verified) {
+    const alreadyUsed = await verifyTokenAlreadyUsed(token);
+    console.log("alreadyUsed : ", alreadyUsed);
+    console.log(verified != null && !alreadyUsed);
+    if(verified != null && !alreadyUsed) {
         res.status(200).json({ message: "Token is valid" });
     }
     else{
@@ -74,7 +99,7 @@ const verifyToken = (req : Request, res : Response) => {
  * @param endDate - The end date for the evaluation form.
  * @returns A promise that resolves to a message indicating the result of the email sending process.
  */
-async function sendFormEmailStudent(student_id : number, student_email : string, course : string, endDate : string) : Promise<string> {
+async function sendFormEmailStudent(student_id : number, student_email : string, course : string, endDate : string, id_form : number) : Promise<string> {
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -89,7 +114,7 @@ async function sendFormEmailStudent(student_id : number, student_email : string,
 
     const token = createTokenForm(student_id, "student", endDate);
     
-    const link = "http://localhost:3000/forms/form1?token=" + token;
+    const link = "http://localhost:3000/pages/FeedbackSystemIntro?idForm=" + id_form +"&token=" + token;
     const date = new Date(endDate).toLocaleDateString();
 
     const templateData = {
@@ -186,7 +211,7 @@ async function sendFormToStudentsByCourse(req : Request, res : Response) : Promi
         const course : Course = await fetchInfoCourse(req.body.id_course);
         var emailsSent = true;
         listStudents.students.forEach(async student => {
-            const result = await sendFormEmailStudent(student.id, student.email, course.name, "2024-12-31T23:59:59Z");
+            const result = await sendFormEmailStudent(student.id, student.email, course.name, "2024-12-31T23:59:59Z", 1);
             console.log(result);
             if(result !== 'Message sent') {
                 emailsSent = false;
@@ -208,7 +233,7 @@ async function sendFormToStudentsByCourse(req : Request, res : Response) : Promi
  * @param endDate - The end date for the evaluation form.
  * @returns A promise that resolves to a message indicating the result of the email sending process.
  */
-async function sendFormToStudentsByCourseFunction(course_name : string, endDate : Date) : Promise<string> {
+async function sendFormToStudentsByCourseFunction(course_name : string, endDate : Date, id_form : number) : Promise<string> {
     console.log("course name :", course_name);
     const response = await fetch(`${EFREI_API_URL}/course/getCourseId?name=${course_name}`, {
         method: "GET",
@@ -234,7 +259,7 @@ async function sendFormToStudentsByCourseFunction(course_name : string, endDate 
         console.log("course", course);
         var emailsSent = true;
         listStudents.students.forEach(async student => {
-            const result = await sendFormEmailStudent(student.id, student.email, course_name, endDate.toISOString());
+            const result = await sendFormEmailStudent(student.id, student.email, course_name, endDate.toISOString(), id_form);
             console.log(result);
             if(result !== 'Message sent') {
                 emailsSent = false;
@@ -253,5 +278,5 @@ async function sendFormToStudentsByCourseFunction(course_name : string, endDate 
 export {
     sendFormToStudentsByCourse,
     sendFormToStudentsByCourseFunction,
-    verifyToken
+    verifyToken,
 };

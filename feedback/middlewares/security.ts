@@ -10,7 +10,6 @@ const { verify } = jwt;
  * @returns Goes onto the next function if the token is valid, otherwise throws an error.
  */
 export async function verifyToken(request: Request, response: Response, next: () => void) : Promise<void> {
-    console.log('middleware');
     let token = request.get("Authorization");
     if (!!token && token.startsWith('Bearer ')) {
         token = token.slice(7);
@@ -30,7 +29,6 @@ export async function verifyToken(request: Request, response: Response, next: ()
             }
             
             if (typeof data === 'object' && 'user_role' in data && 'user_id' in data) {
-                console.log(data);
                 request.body.user_id = (data as jwt.JwtPayload).user_id;
                 request.body.user_role = (data as jwt.JwtPayload).user_role;
                 if(request.body.user_role != 'admin' && request.body.user_role != 'student' && request.body.user_role != 'teacher') {

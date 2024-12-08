@@ -36,4 +36,5 @@ export type Grade = {
 export type Answer = {
   id_form: number;
   grades: Grade[];
+  token: string;
 };

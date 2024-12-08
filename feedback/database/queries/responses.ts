@@ -11,7 +11,12 @@ export type Answer = {
   grades: Grade[];
 };
 
-export const createResponse = async (response: Answer): Promise<Answer> => {
+export type Response = {
+  id_form: number;
+  grades: Grade[];
+};
+
+export const createResponse = async (response: Response): Promise<Answer> => {
   try {
     const { grades: grades, ...responseData } = response;
     const [{ id_response }] = await db('responses').insert(responseData).returning('id_response');

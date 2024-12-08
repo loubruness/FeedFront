@@ -5,6 +5,6 @@ import { Router } from 'express';
 const router = Router();
 
 router.post("/sendFormToStudentsByCourse", sendFormToStudentsByCourse);
-router.get("/verifyToken", verifyToken);
+router.get("/verifyTokenForm", verifyToken);
 
 export default router;

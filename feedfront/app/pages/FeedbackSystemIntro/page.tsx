@@ -31,6 +31,7 @@ function Section({ title, content }: { title: string; content: string }) {
 export default function FeedbackIntro(): JSX.Element {
     const searchParams = useSearchParams();
     const idForm = searchParams.get('idForm');
+    const token = searchParams.get('token');
     const { verifyToken, setVerified, verified } = useFeedbackForm();
     const router = useRouter();
 
@@ -42,7 +43,8 @@ export default function FeedbackIntro(): JSX.Element {
           if (tokenForm) {
               const verifiedUser : boolean =  await verifyToken(tokenForm);
               setVerified(verifiedUser);
-              if(!verified){
+              console.log(verifiedUser);
+              if(!verifiedUser){
                   alert("Invalid token, redirecting to dashboard");
                   router.push("./Dashboard");
               }
@@ -53,6 +55,11 @@ export default function FeedbackIntro(): JSX.Element {
         };
         verify();
       }, [searchParams]);
+
+      useEffect(() => {
+        console.log("verified");
+        console.log(verified);
+      }, [verified]);
     
 
       return (
@@ -62,7 +69,7 @@ export default function FeedbackIntro(): JSX.Element {
                 <div className="flex items-center justify-center w-full h-full">
                     {/* Render a message or spinner while checking */}
                     <div className="text-white text-xl font-semibold">
-                        {verified === null ? "Verifying your token..." : "Unauthorized. Redirecting..."}
+                        Verifying your token...
                     </div>
                 </div>
             ) : (
@@ -104,7 +111,7 @@ export default function FeedbackIntro(): JSX.Element {
                                     title="Disclaimer"
                                     content={`The information collected on this form is used by the school to improve its teaching services. \n\nThe survey concerns the modules of the current school year, the responses are treated anonymously. The results are communicated to teachers and the administration (still anonymously). \n \nThe data will be kept until the end of the current semester.`}
                                 />
-                                <Link href={`../pages/FeedbackSystem?idForm=${idForm}`}>
+                                <Link href={`../pages/FeedbackSystem?idForm=${idForm}&token=${token}`}>
                                     <button
                                         aria-label="Start Evaluation"
                                         className="mt-28 tracking-wide font-semibold bg-gradient-to-tl from-blue-500 to-indigo-500 text-gray-100 w-full min-w-[34rem] py-4 rounded-lg hover:bg-gradient-to-tr from-blue-500 to-indigo-500 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
