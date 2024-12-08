@@ -167,3 +167,25 @@ export const deleteForm = async (id_form: number): Promise<void> => {
     throw new Error(`Could not delete form with ID ${id_form}.`);
   }
 };
+
+/**
+ * Fetch forms_id that have been responded to by a specific student.
+ * @returns forms_id that have been responded to by a specific student.
+ * @throws Error if the database query fails.
+ */
+export const getRespondedFormsIdByStudent = async (id_student: number): Promise<number[]> => {
+  try {
+    const ids = await db('students_forms')
+    .select('students_forms.id_form')
+    .leftJoin('token_used', 'students_forms.token', 'token_used.token')
+    .where('students_forms.id_student', id_student)
+    .whereNotNull('students_forms.token')
+    
+    return ids.map(id => id.id_form);
+    
+  
+  } catch (error) {
+    console.error("Error fetching forms_id by student:", error);
+    throw new Error("Could not fetch forms_id by student.");
+  }
+}

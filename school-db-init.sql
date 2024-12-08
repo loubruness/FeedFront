@@ -47,6 +47,9 @@ VALUES ('Student', 'STUDENT', 'student@efrei.net', 'pass', 'student');
 INSERT INTO EfreiUser (firstname, lastname, email, password, role)
 VALUES ('Student2', 'STUDENT2', 'student2@efrei.net', 'pass', 'student');
 
+INSERT INTO EfreiUser (firstname, lastname, email, password, role)
+VALUES ('arthur', 'BILLEBAUT', 'arthur.billebaut@efrei.net', 'pass', 'student');
+
 -- Courses
 
 INSERT INTO Course (name, end_date)
@@ -87,3 +90,14 @@ INSERT INTO efreiuser_course (efreiuser_id, course_id)
 VALUES (6, 4);
 INSERT INTO efreiuser_course (efreiuser_id, course_id)
 VALUES (6, 5);
+
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (7, 1);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (7, 2);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (7, 3);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (7, 4);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (7, 5);

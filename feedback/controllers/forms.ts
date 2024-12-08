@@ -6,7 +6,8 @@ import {
     getFormWithFields,
     getForms,
     updateForm,
-    updateFormWithFields
+    updateFormWithFields,
+    getRespondedFormsIdByStudent
 } from '../database/queries/forms';
 
 import nodeSchedule from 'node-schedule';
@@ -37,10 +38,13 @@ export async function getFormsAction(request, response) {
             const forms = await getForms();
             response.status(200).json(forms);
         }
+        else if (user_role === 'student')
+        {
+            const forms = await getStudentForms(user_id);
+            response.status(200).json(forms);
+        }
         else {
-            const courses = await fetchUserCoursesAction(user_id);
-            const courseNames = courses.map(course => course.name);
-            const forms = await getCoursesForms(courseNames);
+            const forms = await getTeacherForms(user_id);
             response.status(200).json(forms);
         }
 
@@ -49,6 +53,38 @@ export async function getFormsAction(request, response) {
         response.status(500).json({ error: 'Failed to fetch forms' });
     }
 }
+
+/**
+ * Fetche student forms from the database and set the status of the form to past if the student has already responded to the form.
+ * @param user_id the user_id of the student
+ * @returns forms
+ */
+const getStudentForms = async (user_id: number) => {
+    const courses = await fetchUserCoursesAction(user_id);
+    const courseNames = courses.map(course => course.name);
+    const forms = await getCoursesForms(courseNames);
+    const respondedFormsId = await getRespondedFormsIdByStudent(user_id);
+    console.log('getFormsAction: ', respondedFormsId);
+    return forms.map(form => {
+        if (respondedFormsId.includes(form.id_form)) {
+            form.status = 'past';
+        }
+        return form;
+    });
+}
+
+/**
+ * Fetches teacher forms from the database.
+ * @param user_id the user_id of the teacher
+ * @returns forms
+ */
+const getTeacherForms = async (user_id: number) => {
+    const courses = await fetchUserCoursesAction(user_id);
+    const courseNames = courses.map(course => course.name);
+    const forms = await getCoursesForms(courseNames);
+    return forms;
+}
+
 
 /**
  * Fetches a form along with its fields by ID.
@@ -78,7 +114,7 @@ export async function getFormWithFieldsAction(request, response) {
 export async function createFormWithFieldsAction(request, response) {
     try {
         const { course_name } = request.body;
-        const { user_role, user_id, ...restForm} = request.body;
+        const { user_role, user_id, ...restForm } = request.body;
 
         if (!course_name) {
             return response.status(400).json({ error: 'course_name is required' });
@@ -291,6 +327,8 @@ async function fetchUserCoursesAction(user_id: number): Promise<Course[]> {
         throw new Error("Failed to fetch user courses from EFREI API");
     }
 }
+
+
 
 type Course = {
     id: number;

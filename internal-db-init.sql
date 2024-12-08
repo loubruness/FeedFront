@@ -1,33 +1,5 @@
 -- INITIALIZE DATABASE SCHEMA
 CREATE TYPE status AS ENUM ('default', 'draft', 'finalized', 'current', 'past');
-CREATE TABLE user_app (
-   Id SERIAL,
-   hashed_password VARCHAR(50) NOT NULL,
-   PRIMARY KEY(Id)
-);
-
-CREATE TABLE student (
-   Id INT,
-   email VARCHAR(50),
-   PRIMARY KEY(Id),
-   UNIQUE(email),
-   FOREIGN KEY(Id) REFERENCES user_app(Id)
-);
-
-CREATE TABLE teacher (
-   Id INT,
-   name VARCHAR(50),
-   lastname VARCHAR(50),
-   PRIMARY KEY(Id),
-   FOREIGN KEY(Id) REFERENCES user_app(Id)
-);
-
-CREATE TABLE admin (
-   Id INT,
-   PRIMARY KEY(Id),
-   FOREIGN KEY(Id) REFERENCES user_app(Id)
-);
-
 CREATE TABLE token_used (
    token TEXT,
    PRIMARY KEY(token)
@@ -40,8 +12,7 @@ CREATE TABLE forms (
    Id_admin INT NOT NULL,
    status status DEFAULT 'draft',
    PRIMARY KEY(Id_form),
-   UNIQUE(course_name),
-   FOREIGN KEY(Id_admin) REFERENCES admin(Id)
+   UNIQUE(course_name)
 );
 
 CREATE TABLE fields (
@@ -65,7 +36,6 @@ CREATE TABLE teachers_forms (
    Id_teacher INT,
    Id_form INT,
    PRIMARY KEY(Id_teacher, Id_form),
-   FOREIGN KEY(Id_teacher) REFERENCES teacher(Id),
    FOREIGN KEY(Id_form) REFERENCES forms(Id_form)
 );
 
@@ -75,7 +45,6 @@ CREATE TABLE students_forms (
    token TEXT NOT NULL,
    PRIMARY KEY(Id_student, Id_form),
    UNIQUE(token),
-   FOREIGN KEY(Id_student) REFERENCES student(Id),
    FOREIGN KEY(Id_form) REFERENCES forms(Id_form)
 );
 
@@ -90,40 +59,6 @@ CREATE TABLE grades (
 );
 
 -- INSERT SAMPLE DATA
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-INSERT INTO user_app (hashed_password) VALUES ('1234');
-
-INSERT INTO student (Id, email) VALUES (11, 'arthur@mail.com');
-INSERT INTO student (Id, email) VALUES (12, 'pauline@mail.com');
-INSERT INTO student (Id, email) VALUES (13, 'lou@mail.com');
-INSERT INTO student (Id, email) VALUES (14, 'hugo@mail.com');
-INSERT INTO student (Id, email) VALUES (15, 'asma@mail.com');
-
-INSERT INTO teacher (Id, name, lastname) VALUES (6, 'michel', 'dupont');
-INSERT INTO teacher (Id, name, lastname) VALUES (7, 'jean', 'martin');
-INSERT INTO teacher (Id, name, lastname) VALUES (8, 'pierre', 'durand');
-INSERT INTO teacher (Id, name, lastname) VALUES (9, 'luc', 'dubois');
-INSERT INTO teacher (Id, name, lastname) VALUES (10, 'marie', 'bernard');
-
-INSERT INTO admin (Id) VALUES (1);
-INSERT INTO admin (Id) VALUES (2);
-INSERT INTO admin (Id) VALUES (3);
-INSERT INTO admin (Id) VALUES (4);
-INSERT INTO admin (Id) VALUES (5);
-
 INSERT INTO forms (course_name, end_date, Id_admin, status) VALUES ('Default', '2021-12-31', 1, 'default');
 
 INSERT INTO fields (Id_form, title, question, editable) VALUES (1, 'Satisfaction', 'Overall, I am satisfied with the lessons with this teacher', FALSE);
