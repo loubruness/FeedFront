@@ -36,7 +36,7 @@ const FeedbackForm = () => {
                     {userRole === "admin" ? isCreatingForm ? "Create Survey" : formStatus == "draft" ? "Update Survey" : "View Survey" : "Give Feedback"}
                 </h1>
             </div>
-            {userRole === "admin" ? (
+            {userRole === "admin" && selectedRole === "admin" ? (
                 <AdminFields
                     fields={fields}
                     updateFieldHandler={updateFieldHandler}
