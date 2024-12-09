@@ -44,3 +44,19 @@ export const storeTokenForm = async (id_student, id_form, token) => {
         throw new Error("Could not store token.");
     }
 }
+
+/**
+ * Get the token associated with a student and form from the database.
+ * @param id_student - The ID of the student.
+ * @param id_form - The ID of the form.
+ * @returns The token if it exists, otherwise null.
+ * @throws Error if the retrieval operation fails.
+ */
+export const getStudentFormToken = async (id_student, id_form) => {
+    try {
+        const result = await db('students_forms').select('token').where({ id_student, id_form });
+        return result[0];
+    } catch (error) {
+        return null;
+    }
+}

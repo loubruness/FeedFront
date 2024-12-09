@@ -60,13 +60,6 @@ export const loadForm = async (id: number): Promise<FormWithFields> => {
   return await apiFetch(`/forms/${id}`);
 };
 
-export const submitAnswer = async (response: Answer) => {
-  return await apiFetch("/responses/", {
-    method: "POST",
-    body: JSON.stringify(response),
-  });
-};
-
 export const getCourseOptions = async (): Promise<string[]> => {
   return await apiFetch("/forms/coursesWithoutForm");
 };
@@ -80,3 +73,14 @@ export const deleteForm = async (id_form: number) => {
     method: "DELETE",
   });
 }
+
+export const submitAnswer = async (response: Answer) => {
+  return await apiFetch("/responses/", {
+    method: "POST",
+    body: JSON.stringify(response),
+  });
+};
+
+export const getStudentFormToken = async (id_form: number) => {
+  return await apiFetch(`/email/getStudentFormToken/${id_form}`);
+};

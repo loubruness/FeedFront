@@ -9,6 +9,7 @@ import {
     updateFormWithFields,
     getRespondedFormsIdByStudent
 } from '../database/queries/forms';
+import { Request, Response } from 'express';
 
 import nodeSchedule from 'node-schedule';
 import { sendFormToStudentsByCourseFunction } from './email';
@@ -31,7 +32,7 @@ const DELETE_DELAY = 6; // Delay for deletion in months
 /**
  * Fetches all forms from the database.
  */
-export async function getFormsAction(request, response) {
+export async function getFormsAction(request:Request, response:Response) {
     try {
         const { user_id, user_role } = request.body;
         if (user_role === 'admin') {
@@ -89,7 +90,7 @@ const getTeacherForms = async (user_id: number) => {
 /**
  * Fetches a form along with its fields by ID.
  */
-export async function getFormWithFieldsAction(request, response) {
+export async function getFormWithFieldsAction(request:Request, response:Response) {
     try {
         const id_form = parseInt(request.params.id_form);
         if (!id_form) {
@@ -111,7 +112,7 @@ export async function getFormWithFieldsAction(request, response) {
 /**
  * Creates a new form with fields.
  */
-export async function createFormWithFieldsAction(request, response) {
+export async function createFormWithFieldsAction(request:Request, response:Response) {
     try {
         const { course_name } = request.body;
         const { user_role, user_id, ...restForm } = request.body;
@@ -140,7 +141,7 @@ export async function createFormWithFieldsAction(request, response) {
 /**
  * Updates a form with fields if it is in draft status.
  */
-export async function updateFormWithFieldsAction(request, response) {
+export async function updateFormWithFieldsAction(request:Request, response:Response) {
     try {
         const id_form = parseInt(request.params.id_form);
         const { course_name, user_id } = request.body;
@@ -180,7 +181,7 @@ export async function updateFormWithFieldsAction(request, response) {
 /**
  * Finalizes a draft form, schedules it for sending, and sets its status to "finalized".
  */
-export async function finalizeFormAction(request, response) {
+export async function finalizeFormAction(request:Request, response:Response) {
     try {
         const id_form = parseInt(request.params.id_form);
         if (!id_form) {
@@ -255,7 +256,7 @@ async function closeFormAction(id_form: number) {
 /**
  * Deletes a form by ID.
  */
-export async function deleteFormAction(request, response) {
+export async function deleteFormAction(request:Request, response:Response) {
     try {
         const id_form = parseInt(request.params.id_form);
         if (!id_form) {
@@ -273,7 +274,7 @@ export async function deleteFormAction(request, response) {
 /**
  * Fetches course names that do not have associated forms.
  */
-export async function getCoursesNamesWithoutFormAction(request, response) {
+export async function getCoursesNamesWithoutFormAction(request:Request, response:Response) {
     try {
         const courses = await fetchCoursesAction();
         const forms = await getForms();

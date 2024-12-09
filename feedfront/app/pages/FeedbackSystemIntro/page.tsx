@@ -1,10 +1,12 @@
 "use client";
 
 import { useRouter, useSearchParams } from 'next/navigation';
+import { getStudentFormToken } from '@/api/feedbackSystem';
 
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useFeedbackForm } from '../../hooks/useFeedbackIntro';
+import { get } from 'http';
 
 // Section component
 function Section({ title, content }: { title: string; content: string }) {
@@ -29,40 +31,39 @@ function Section({ title, content }: { title: string; content: string }) {
 
 // Feedback Introduction component
 export default function FeedbackIntro(): JSX.Element {
+    const [token, setToken] = useState<string | null>(null);
     const searchParams = useSearchParams();
     const idForm = searchParams.get('idForm');
-    const token = searchParams.get('token');
     const { verifyToken, setVerified, verified } = useFeedbackForm();
     const router = useRouter();
 
     useEffect(() => {
-        console.log("here");
         const verify = async () => {
-          const tokenForm = searchParams.get("token");
-          console.log(tokenForm);
-          if (tokenForm) {
-              const verifiedUser : boolean =  await verifyToken(tokenForm);
-              setVerified(verifiedUser);
-              console.log(verifiedUser);
-              if(!verifiedUser){
-                  alert("Invalid token, redirecting to dashboard");
-                  router.push("./Dashboard");
-              }
-          } else {
-            alert("Token not provided, redirecting to dashboard");
-            router.push("./Dashboard");
-          }
+            const myToken = searchParams.get('token') || await getStudentFormToken(parseInt(idForm || '')).then((data) => data.token);
+            setToken(myToken);
+            if (myToken) {
+                const verifiedUser: boolean = await verifyToken(myToken);
+                setVerified(verifiedUser);
+                console.log(verifiedUser);
+                if (!verifiedUser) {
+                    alert("Invalid token, redirecting to dashboard");
+                    router.push("./Dashboard");
+                }
+            } else {
+                alert("Token not provided, redirecting to dashboard");
+                router.push("./Dashboard");
+            }
         };
         verify();
-      }, [searchParams]);
+    }, [searchParams]);
 
-      useEffect(() => {
+    useEffect(() => {
         console.log("verified");
         console.log(verified);
-      }, [verified]);
-    
+    }, [verified]);
 
-      return (
+
+    return (
         <div className="min-h-screen bg-blue-900 text-gray-900 flex justify-center items-baseline">
             {/* If verified is false, show a loading or unauthorized message */}
             {!verified ? (
@@ -140,5 +141,5 @@ export default function FeedbackIntro(): JSX.Element {
             )}
         </div>
     );
-    
+
 }

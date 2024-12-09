@@ -1,7 +1,7 @@
 import { Class, Course } from '../util/Student';
 import { Request, Response } from 'express';
 import { sign, verify } from 'jsonwebtoken';
-import { storeTokenForm, verifyTokenUsed } from '../database/queries/email';
+import { storeTokenForm, verifyTokenUsed, getStudentFormToken } from '../database/queries/email';
 
 import hbs from 'nodemailer-handlebars';
 import nodemailer from 'nodemailer';
@@ -272,9 +272,44 @@ async function sendFormToStudentsByCourseFunction(course_name : string, endDate 
     }
 }
 
+/**
+ * Send the evaluation token to the student.
+ * @param req - The request object.
+ * @param rep - The response object.
+ * @returns 
+ */
+const getStudentFormTokenFunction = async (req: Request, rep: Response): Promise<void> => {
+    try {
+        if (req.body.user_role !== "student") {
+            rep.status(403).json({ error: "You are not a student" });
+            return;
+        }
+        if (!req.body.user_id) {
+            rep.status(400).json({ error: "Student ID is required" });
+            return;
+        }
+        const id_form = parseInt(req.params.id_form);
+        if (!id_form) {
+            rep.status(400).json({ error: "Form ID is required" });
+            return;
+        }
+        const token = await getStudentFormToken(req.body.user_id, id_form);
+        if (token) {
+            rep.status(200).json( token );
+        } else {
+            rep.status(404).json({ error: "Token not found" });
+        }
+    } catch (error) {
+        rep.status(500).json({ error: error });
+    }
+}
+
+    
+
 
 export {
     sendFormToStudentsByCourse,
     sendFormToStudentsByCourseFunction,
     verifyToken,
+    getStudentFormTokenFunction,
 };
