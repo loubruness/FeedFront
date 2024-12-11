@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { Form } from "@/types";
-
-import { getForms } from "@/api/feedbackSystem";
-import { deleteForm } from "@/api/feedbackSystem";
+import { getForms, deleteForm } from "@/api/feedbackSystem";
 import { useRouter } from 'next/navigation';
+import { saveAs } from 'file-saver';
+
 
 export const useDashboard = () => {
   const [forms, setForms] = useState<Form[]>([]);
@@ -13,6 +13,28 @@ export const useDashboard = () => {
     if (confirm("Are you sure you want to delete this form?")) {
       await deleteForm(id);
       setForms(forms.filter((form) => form.id_form !== id));
+    }
+  };
+
+  const generateReportHandler = async (id_form: number): Promise<void> => {
+    try {
+      // Trigger the backend API to generate and return the PDF
+      const response = await fetch(`${process.env.API_HOST}/report/${id_form}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to generate report: ${response.statusText}`);
+      }
+  
+      // Save the PDF as a file
+      const blob = await response.blob();
+      saveAs(blob, `grade_averages_form_${id_form}.pdf`);
+    } catch (error: any) {
+      console.error('Error generating PDF:', error.message);
     }
   };
 
@@ -28,5 +50,5 @@ export const useDashboard = () => {
     router.push(`/pages/FeedbackSystem?idForm=${id}`);
   };
 
-  return { forms, goToForm, deleteFormHandler };
+  return { forms, goToForm, deleteFormHandler, generateReportHandler };
 };
