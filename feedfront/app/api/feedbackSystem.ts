@@ -1,6 +1,6 @@
 import { FormWithFields, Answer } from "@/types";
 
-const host = process.env.NEXT_PUBLIC_BACK_ADDRESS;
+const host = `http://${process.env.NEXT_PUBLIC_BACK_ADDRESS}`;
 
 const getToken = () => localStorage.getItem("token");
 
