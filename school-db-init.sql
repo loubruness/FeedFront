@@ -50,19 +50,27 @@ VALUES ('Student2', 'STUDENT2', 'student2@efrei.net', 'pass', 'student');
 INSERT INTO EfreiUser (firstname, lastname, email, password, role)
 VALUES ('arthur', 'BILLEBAUT', 'arthur.billebaut@efrei.net', 'pass', 'student');
 
+INSERT INTO EfreiUser (firstname, lastname, email, password, role)
+VALUES ('lou', 'BRUNESSEAUX', 'lou.brunesseaux@efrei.net', 'pass', 'student');
+
+INSERT INTO EfreiUser (firstname, lastname, email, password, role)
+VALUES ('lou', 'BRUNESSEAUX', 'loubruness@gmail.com', 'pass', 'student');
+
 -- Courses
 
 INSERT INTO Course (name, end_date)
-VALUES ('ST2APR - Advanced Programming (I3, I3-PRO - 2425S9)', '2024-12-31');
+VALUES ('ST2APR - Advanced Programming (I3, I3-PRO - 2425S9)', '2024-12-11');
 INSERT INTO Course (name, end_date)
-VALUES ('ST2TST - Software Testing (I3, I3-PRO - 2425S9)', '2024-11-30');
+VALUES ('ST2TST - Software Testing (I3, I3-PRO - 2425S9)', '2024-12-11');
 INSERT INTO Course (name, end_date)
-VALUES ('ST2SSA - Software Systems Architectures  (I3, I3-PRO - 2425S9)', '2025-12-31');
+VALUES ('ST2SSA - Software Systems Architectures  (I3, I3-PRO - 2425S9)', '2024-12-11');
 INSERT INTO Course (name, end_date)
-VALUES ('SP201I - From the Atom to the Microchip (P1-INT - 2425S2)', '2023-12-31');
+VALUES ('SP201I - From the Atom to the Microchip (P1-INT - 2425S2)', '2024-12-11');
 INSERT INTO Course (name, end_date)
-VALUES ('SP106I - General Electricity (P1-INT - 2425S1)', '2024-12-31');
+VALUES ('SP106I - General Electricity (P1-INT - 2425S1)', '2024-12-11');
 
+INSERT INTO Course (name, end_date)
+VALUES ('ST2APR - Advanced Architecture (I3, I3-PRO - 2425S9)', '2024-12-11');
 -- Assign courses to teachers
 
 INSERT INTO efreiuser_course (efreiuser_id, course_id)
@@ -101,3 +109,25 @@ INSERT INTO efreiuser_course (efreiuser_id, course_id)
 VALUES (7, 4);
 INSERT INTO efreiuser_course (efreiuser_id, course_id)
 VALUES (7, 5);
+
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (8, 1);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (8, 2);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (8, 3);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (8, 4);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (8, 5);
+
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (9, 1);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (9, 2);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (9, 3);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (9, 4);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (9, 5);

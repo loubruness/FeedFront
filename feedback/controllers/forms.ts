@@ -214,7 +214,10 @@ export async function finalizeFormAction(request:Request, response:Response) {
 
         await updateForm({ ...form, status: 'finalized' });
 
-        nodeSchedule.scheduleJob(new Date(form.end_date), async () => {
+        const end_date = new Date();
+        //attention à changerrrrrrrrrr
+        end_date.setSeconds(end_date.getSeconds() + 5);
+        nodeSchedule.scheduleJob(end_date, async () => {
             await sendFormAction(id_form);
         });
 
@@ -307,9 +310,9 @@ export async function deleteFormAction(request:Request, response:Response) {
  */
 export async function getCoursesNamesWithoutFormAction(request:Request, response:Response) {
     try {
-        if (request.body.user_role !== 'admin') {
-            return response.status(403).json({ error: 'Unauthorized access' });
-        }
+        // if (request.body.user_role !== 'admin') {
+        //     return response.status(403).json({ error: 'Unauthorized access' });
+        // }
         const courses = await fetchCoursesAction();
         const forms = await getForms();
         const courseNamesWithForms = forms.map(form => form.course_name);
