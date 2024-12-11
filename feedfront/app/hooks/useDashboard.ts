@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Form } from "@/types";
-import { getForms, deleteForm } from "@/api/feedbackSystem";
+import { getForms, deleteForm, getCourseName } from "@/api/feedbackSystem";
 import { useRouter } from 'next/navigation';
 import { saveAs } from 'file-saver';
 
@@ -16,30 +16,29 @@ export const useDashboard = () => {
     }
   };
 
-
   const generateReportHandler = async (id_form: number): Promise<void> => {
     try {
-        const response = await fetch(`${process.env.API_HOST}/report/${id_form}`, {
-            method: 'GET',
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
+      // Trigger the backend API to generate and return the PDF
+      const response = await fetch(`${process.env.API_HOST}/report/${id_form}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Failed to generate report: ${response.statusText}`);
+      }
+      
+      const { course_name } = await getCourseName(id_form);
 
-        if (!response.ok) {
-            throw new Error(`Failed to download report: ${response.statusText}`);
-        }
-
-        // Télécharger le fichier PDF directement
-        const blob = await response.blob();
-        saveAs(blob, `Report_${id_form}.pdf`);
+      // Save the PDF as a file
+      const blob = await response.blob();
+      saveAs(blob, `Report_${course_name}.pdf`);
     } catch (error: any) {
-        console.error('Error generating or downloading PDF:', error.message);
+      console.error('Error generating PDF:', error.message);
     }
-};
-
-  
-  
+  };
 
   useEffect(() => {
     getForms().then((data) => {

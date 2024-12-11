@@ -40,3 +40,12 @@ export const generatePDFReport = async (req: Request, res: Response): Promise<vo
 };
 
 
+export const getCourseNameAction = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const id_form = parseInt(req.params.id_form, 10);
+    const course_name = await getCourseName(id_form);
+    res.status(200).json({ success: true, course_name });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
