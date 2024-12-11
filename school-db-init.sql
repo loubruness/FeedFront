@@ -23,6 +23,16 @@ CREATE TABLE efreiuser_course (
    FOREIGN KEY (course_id) REFERENCES Course(id) ON DELETE CASCADE
 );
 
+CREATE TABLE ApiKeys (
+   key TEXT PRIMARY KEY
+);
+
+CREATE TABLE ApiAuthorization (
+   apikey TEXT,
+   authorization TEXT,
+   PRIMARY KEY (apikey, authorization)
+);
+
 
 -- ADD DEFAULT ENTRIES
 
@@ -101,3 +111,9 @@ INSERT INTO efreiuser_course (efreiuser_id, course_id)
 VALUES (7, 4);
 INSERT INTO efreiuser_course (efreiuser_id, course_id)
 VALUES (7, 5);
+
+-- API KEYS
+-- ...
+
+-- API AUTHORIZATIONS
+-- ...
