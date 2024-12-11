@@ -120,3 +120,5 @@ INSERT INTO ApiKeys (key) VALUES ('apikey');
 -- API AUTHORIZATIONS
 INSERT INTO ApiAuthorization (apikey_id, api_authorization) VALUES (1, 'api.user.read');
 INSERT INTO ApiAuthorization (apikey_id, api_authorization) VALUES (1, 'api.user.write');
+INSERT INTO ApiAuthorization (apikey_id, api_authorization) VALUES (1, 'api.course.read');
+INSERT INTO ApiAuthorization (apikey_id, api_authorization) VALUES (1, 'api.course.write');
