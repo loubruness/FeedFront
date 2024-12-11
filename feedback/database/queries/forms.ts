@@ -190,9 +190,7 @@ export const getRespondedFormsIdByStudent = async (id_student: number): Promise<
     .leftJoin('token_used', 'students_forms.token', 'token_used.token')
     .where('students_forms.id_student', id_student)
     .whereNotNull('students_forms.token') // Exclure les tokens nulls
-    .whereNotNull('token_used.token');
-    console.log(ids);
-    
+    .whereNotNull('token_used.token');  
     return ids.map(id => id.id_form);
   } catch (error) {
     console.error("Error fetching forms_id by student:", error);
