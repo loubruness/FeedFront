@@ -9,6 +9,7 @@ const AdminDashboard = () => {
   const {
     forms,
     deleteFormHandler,
+    generateReportHandler
   } = useDashboard();
   return (
     <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
@@ -171,7 +172,9 @@ const AdminDashboard = () => {
                   </td>
 
                   <td className="py-3 px-5 border-b border-blue-gray-50">
-                    <button aria-expanded="false" aria-haspopup="menu" id=":r2:" className="relative middle text-sky-500 none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-gray-700 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30" type="button">
+                    <button aria-expanded="false" aria-haspopup="menu" id=":r2:" className="relative middle text-sky-500 none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-gray-700 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30" type="button"
+                      onClick={() => { generateReportHandler(form.id_form) }}
+                    >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6  hover:text-green-400">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                       </svg>
@@ -226,7 +229,9 @@ const AdminDashboard = () => {
                     </div>
                   </td>
                   <td className="py-3 px-5 border-b border-blue-gray-50">
-                    <button aria-expanded="false" aria-haspopup="menu" id=":r2:" className="relative middle text-sky-500 none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-gray-700 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30" type="button">
+                    <button aria-expanded="false" aria-haspopup="menu" id=":r2:" className="relative middle text-sky-500 none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-gray-700 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30" type="button"
+                      onClick={() => { generateReportHandler(form.id_form) }}
+                    >
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6  hover:text-green-400">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                       </svg>
