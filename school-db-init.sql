@@ -24,13 +24,15 @@ CREATE TABLE efreiuser_course (
 );
 
 CREATE TABLE ApiKeys (
-   key TEXT PRIMARY KEY
+   id SERIAL PRIMARY KEY,
+   key TEXT
 );
 
 CREATE TABLE ApiAuthorization (
-   apikey TEXT,
-   authorization TEXT,
-   PRIMARY KEY (apikey, authorization)
+   apikey_id INT,
+   api_authorization TEXT,
+   PRIMARY KEY (apikey_id, api_authorization),
+   FOREIGN KEY (apikey_id) REFERENCES ApiKeys(id) ON DELETE CASCADE
 );
 
 
@@ -113,7 +115,8 @@ INSERT INTO efreiuser_course (efreiuser_id, course_id)
 VALUES (7, 5);
 
 -- API KEYS
--- ...
+INSERT INTO ApiKeys (key) VALUES ('apikey');
 
 -- API AUTHORIZATIONS
--- ...
+INSERT INTO ApiAuthorization (apikey_id, api_authorization) VALUES (1, 'api.user.read');
+INSERT INTO ApiAuthorization (apikey_id, api_authorization) VALUES (1, 'api.user.write');
