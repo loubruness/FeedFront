@@ -1,12 +1,11 @@
 "use client";
 
+import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getStudentFormToken } from '@/api/feedbackSystem';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { getStudentFormToken } from '@/api/feedbackSystem';
 import { useFeedbackForm } from '../../hooks/useFeedbackIntro';
-import { get } from 'http';
 
 // Section component
 function Section({ title, content }: { title: string; content: string }) {
@@ -50,8 +49,8 @@ export default function FeedbackIntro(): JSX.Element {
                     router.push("./Dashboard");
                 }
             } else {
-                alert("Token not provided, redirecting to dashboard");
-                router.push("./Dashboard");
+                alert("Token not provided, redirecting to login");
+                router.push("./Login");
             }
         };
         verify();

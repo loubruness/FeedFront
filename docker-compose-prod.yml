@@ -6,13 +6,27 @@ services:
     container_name: feedfront-frontend
     ports:
       - "3000:3000"
+    networks:
+      - feedfront-network
   feedback:
-    build: 
+    build:
       context: ./feedback
       dockerfile: ./Dockerfile-prod
     container_name: feedfront-backend
     ports:
-      - "3001:3000"
+      - "3001:3001"
+    environment:
+      EFREI_API_URL: http://efrei-api:8000
+      EFREI_API_KEY: apikey
+      DB_NAME: feedfront
+      DB_USER: pgsql_feedfront
+      DB_PASS: pgsql_pass
+      DB_HOST: internal-database
+      DB_PORT: 5432
+    volumes:
+      - ./feedback.env:/app/.env
+    networks:
+      - feedfront-network
   efrei-api:
     build:
       context: ./efrei-api
@@ -20,6 +34,8 @@ services:
     container_name: feedfront-efrei-api
     ports:
       - "8000:8000"
+    networks:
+      - feedfront-network
   internal-database:
     image: postgres:17
     container_name: feedfront-internal-database
@@ -38,6 +54,8 @@ services:
       # SQL script to initialize the database
       - ./internal-db-init.sql:/docker-entrypoint-initdb.d/internal-db-init.sql
       - internaldb:/var/lib/postgresql/data
+    networks:
+      - feedfront-network
   school-database:
     image: postgres:17
     container_name: feedfront-school-database
@@ -56,7 +74,13 @@ services:
       # SQL script to initialize the database
       - ./school-db-init.sql:/docker-entrypoint-initdb.d/school-db-init.sql
       - schooldb:/var/lib/postgresql/data
+    networks:
+      - feedfront-network
 
 volumes:
   internaldb:
   schooldb:
+
+networks:
+  feedfront-network:
+    driver: bridge

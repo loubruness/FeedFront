@@ -19,7 +19,7 @@ export interface ProfileResponse {
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
     try {
-        const response = await fetch('http://localhost:3001/auth/login', {
+        const response = await fetch(`http://${process.env.NEXT_PUBLIC_BACK_ADDRESS}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
@@ -53,7 +53,7 @@ export const login = async (email: string, password: string): Promise<LoginRespo
 };
 
 export const fetchProfile = async (token: string): Promise<ProfileResponse> => {
-    const response = await fetch('http://localhost:3001/profile/getProfileInfos', {
+    const response = await fetch(`http://${process.env.NEXT_PUBLIC_BACK_ADDRESS}/profile/getProfileInfos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
