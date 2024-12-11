@@ -248,6 +248,13 @@ async function closeFormAction(id_form: number) {
 
         await updateForm({ ...form, status: 'past' });
         console.log(`Form ${id_form} closed`);
+        const delete_date = new Date(form.end_date);
+        delete_date.setMonth(delete_date.getMonth() + DELETE_DELAY);
+        nodeSchedule.scheduleJob(delete_date, async () => {
+            await deleteForm(id_form);
+            console.log(`Form ${id_form} deleted`);
+        });
+
     } catch (error) {
         console.error("Error in closeFormAction:", error);
     }
