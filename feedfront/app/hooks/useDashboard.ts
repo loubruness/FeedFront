@@ -16,27 +16,30 @@ export const useDashboard = () => {
     }
   };
 
+
   const generateReportHandler = async (id_form: number): Promise<void> => {
     try {
-      // Trigger the backend API to generate and return the PDF
-      const response = await fetch(`${process.env.API_HOST}/report/${id_form}`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Failed to generate report: ${response.statusText}`);
-      }
-  
-      // Save the PDF as a file
-      const blob = await response.blob();
-      saveAs(blob, `grade_averages_form_${id_form}.pdf`);
+        const response = await fetch(`${process.env.API_HOST}/report/${id_form}`, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to download report: ${response.statusText}`);
+        }
+
+        // Télécharger le fichier PDF directement
+        const blob = await response.blob();
+        saveAs(blob, `Report_${id_form}.pdf`);
     } catch (error: any) {
-      console.error('Error generating PDF:', error.message);
+        console.error('Error generating or downloading PDF:', error.message);
     }
-  };
+};
+
+  
+  
 
   useEffect(() => {
     getForms().then((data) => {
