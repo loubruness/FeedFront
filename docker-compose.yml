@@ -10,9 +10,11 @@ services:
     build: ./feedback
     container_name: feedfront-backend
     ports:
-      - "3001:3000"
+      - "3001:3001"
     volumes:
       - ./feedback/:/app/
+    environment:
+      - EFREI_API_URL=http://efrei-api:8000
   efrei-api:
     build: ./efrei-api
     container_name: feedfront-efrei-api
