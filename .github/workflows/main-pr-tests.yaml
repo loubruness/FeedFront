@@ -22,4 +22,6 @@ jobs:
 
       - name: Run tests
         run: npm run test
+        env:
+          NEXT_PUBLIC_BACK_ADDRESS: localhost:3001
         working-directory: ./feedfront
