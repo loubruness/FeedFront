@@ -61,11 +61,13 @@ export async function getFormsAction(request:Request, response:Response) {
  * @returns forms
  */
 const getStudentForms = async (user_id: number) => {
+    if (!user_id) {
+        throw new Error("user_id is required");
+    }
     const courses = await fetchUserCoursesAction(user_id);
     const courseNames = courses.map(course => course.name);
     const forms = await getCoursesForms(courseNames);
     const respondedFormsId = await getRespondedFormsIdByStudent(user_id);
-    console.log('getFormsAction: ', respondedFormsId);
     return forms.map(form => {
         if (respondedFormsId.includes(form.id_form)) {
             form.status = 'past';
@@ -80,6 +82,9 @@ const getStudentForms = async (user_id: number) => {
  * @returns forms
  */
 const getTeacherForms = async (user_id: number) => {
+    if (!user_id) {
+        throw new Error("user_id is required");
+    }
     const courses = await fetchUserCoursesAction(user_id);
     const courseNames = courses.map(course => course.name);
     const forms = await getCoursesForms(courseNames);
@@ -114,6 +119,9 @@ export async function getFormWithFieldsAction(request:Request, response:Response
  */
 export async function createFormWithFieldsAction(request:Request, response:Response) {
     try {
+        if (request.body.user_role !== 'admin') {
+            return response.status(403).json({ error: 'Unauthorized access' });
+        }
         const { course_name } = request.body;
         const { user_role, user_id, ...restForm } = request.body;
 
@@ -143,6 +151,9 @@ export async function createFormWithFieldsAction(request:Request, response:Respo
  */
 export async function updateFormWithFieldsAction(request:Request, response:Response) {
     try {
+        if (request.body.user_role !== 'admin') {
+            return response.status(403).json({ error: 'Unauthorized access' });
+        }
         const id_form = parseInt(request.params.id_form);
         const { course_name, user_id } = request.body;
 
@@ -183,6 +194,9 @@ export async function updateFormWithFieldsAction(request:Request, response:Respo
  */
 export async function finalizeFormAction(request:Request, response:Response) {
     try {
+        if (request.body.user_role !== 'admin') {
+            return response.status(403).json({ error: 'Unauthorized access' });
+        }
         const id_form = parseInt(request.params.id_form);
         if (!id_form) {
             return response.status(400).json({ error: 'id_form is required' });
@@ -199,7 +213,7 @@ export async function finalizeFormAction(request:Request, response:Response) {
 
         await updateForm({ ...form, status: 'finalized' });
 
-        nodeSchedule.scheduleJob(new Date(form.end_date), async () => {
+        nodeSchedule.scheduleJob(form.end_date, async () => {
             await sendFormAction(id_form);
         });
 
@@ -215,6 +229,9 @@ export async function finalizeFormAction(request:Request, response:Response) {
  */
 async function sendFormAction(id_form: number) {
     try {
+        if (!id_form) {
+            throw new Error('id_form is required');
+        }
         const form = await getFormById(id_form);
         if (!form) {
             throw new Error(`Form ${id_form} not found`);
@@ -241,6 +258,9 @@ async function sendFormAction(id_form: number) {
  */
 async function closeFormAction(id_form: number) {
     try {
+        if (!id_form) {
+            throw new Error('id_form is required');
+        }
         const form = await getFormById(id_form);
         if (!form) {
             throw new Error(`Form ${id_form} not found`);
@@ -248,6 +268,13 @@ async function closeFormAction(id_form: number) {
 
         await updateForm({ ...form, status: 'past' });
         console.log(`Form ${id_form} closed`);
+        const delete_date = new Date(form.end_date);
+        delete_date.setMonth(delete_date.getMonth() + DELETE_DELAY);
+        nodeSchedule.scheduleJob(delete_date, async () => {
+            await deleteForm(id_form);
+            console.log(`Form ${id_form} deleted`);
+        });
+
     } catch (error) {
         console.error("Error in closeFormAction:", error);
     }
@@ -258,6 +285,9 @@ async function closeFormAction(id_form: number) {
  */
 export async function deleteFormAction(request:Request, response:Response) {
     try {
+        if (request.body.user_role !== 'admin') {
+            return response.status(403).json({ error: 'Unauthorized access' });
+        }
         const id_form = parseInt(request.params.id_form);
         if (!id_form) {
             return response.status(400).json({ error: 'id_form is required' });
@@ -276,6 +306,9 @@ export async function deleteFormAction(request:Request, response:Response) {
  */
 export async function getCoursesNamesWithoutFormAction(request:Request, response:Response) {
     try {
+        // if (request.body.user_role !== 'admin') {
+        //     return response.status(403).json({ error: 'Unauthorized access' });
+        // }
         const courses = await fetchCoursesAction();
         const forms = await getForms();
         const courseNamesWithForms = forms.map(form => form.course_name);
@@ -315,6 +348,9 @@ async function fetchCoursesAction(): Promise<Course[]> {
  */
 async function fetchUserCoursesAction(user_id: number): Promise<Course[]> {
     try {
+        if (!user_id) {
+            throw new Error("user_id is required");
+        }
         const response = await fetch(`${EFREI_API_URL}/user/${user_id}/courses`, {
             headers: { "x-api-key": EFREI_API_KEY }
         });

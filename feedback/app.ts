@@ -19,7 +19,7 @@ const { sign } = jwt;
 dotenv.config();
 
 const app = express();
-const PORT: number = 3001;
+const PORT: number = 3000;
 
 app.use(express.json());
 

@@ -12,7 +12,7 @@ export const useFeedbackForm = () => {
     const token = localStorage.getItem("token");
     if (tokenForm) {
       try {
-        const response : Response = await fetch(`http://localhost:3001/email/verifyTokenForm?token=${tokenForm}`, {
+        const response : Response = await fetch(`http://${process.env.NEXT_PUBLIC_BACK_ADDRESS}/email/verifyTokenForm?token=${tokenForm}`, {
           method: 'GET',
           headers: { 'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`,

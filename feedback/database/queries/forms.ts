@@ -160,11 +160,21 @@ export const updateFormWithFields = async (form: FormWithFields): Promise<FormWi
  */
 export const deleteForm = async (id_form: number): Promise<void> => {
   try {
-    await db('fields').where('id_form', id_form).del();
-    await db('forms').where('id_form', id_form).del();
-  } catch (error) {
-    console.error(`Error deleting form with ID ${id_form}:`, error);
-    throw new Error(`Could not delete form with ID ${id_form}.`);
+    await db.transaction(async (trx) => {
+      // Supprimer les données dépendantes dans le bon ordre
+      await trx('grades').where('id_form', id_form).del();
+      await trx('students_forms').where('id_form', id_form).del();
+      await trx('teachers_forms').where('id_form', id_form).del();
+      await trx('responses').where('id_form', id_form).del();
+      await trx('fields').where('id_form', id_form).del();
+
+      // Supprimer le formulaire
+      await trx('forms').where('id_form', id_form).del();
+    });
+
+    console.log(`Formulaire avec id_form = ${id_form} supprimé avec succès.`);
+  } catch (err) {
+    console.error('Erreur lors de la suppression :', err);
   }
 };
 
@@ -180,9 +190,7 @@ export const getRespondedFormsIdByStudent = async (id_student: number): Promise<
     .leftJoin('token_used', 'students_forms.token', 'token_used.token')
     .where('students_forms.id_student', id_student)
     .whereNotNull('students_forms.token') // Exclure les tokens nulls
-    .whereNotNull('token_used.token');
-    console.log(ids);
-    
+    .whereNotNull('token_used.token');  
     return ids.map(id => id.id_form);
   } catch (error) {
     console.error("Error fetching forms_id by student:", error);
