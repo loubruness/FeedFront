@@ -1,10 +1,8 @@
 import { Request, Response } from 'express';
 import { getFormAverageGrades, getCourseName } from '../database/queries/report';
 import PDFDocument from 'pdfkit'; 
-import fs from 'fs';
 
-//Generates a PDF report for average grades of a form.
-// Modify generatePDFReport to send the file directly to the client
+// Generates a PDF report for average grades of a form and send the file to the client
 export const generatePDFReport = async (req: Request, res: Response): Promise<void> => {
   try {
     const id_form = parseInt(req.params.id_form, 10);
@@ -15,10 +13,8 @@ export const generatePDFReport = async (req: Request, res: Response): Promise<vo
 
     // Set headers for PDF response
     res.setHeader('Content-Type', 'application/pdf');
-    // res.setHeader('Content-Disposition', `attachment; filename=Report_${course_name}.pdf`);
     const sanitizedCourseName = course_name.replace(/[^a-zA-Z0-9-_ ]/g, '_'); // Replace special characters with '_'
     res.setHeader('Content-Disposition', `attachment; filename="Report_${sanitizedCourseName}.pdf"`);
-
 
     // Pipe the PDF directly to the response
     doc.pipe(res);
@@ -34,8 +30,7 @@ export const generatePDFReport = async (req: Request, res: Response): Promise<vo
       doc.fontSize(12).text(title, { continued: true });
       doc.text(Number(averageGrade).toFixed(2), { align: 'right' });
     });
-
-    // Finalize the PDF
+    
     doc.end();
   } catch (error: any) {
     res.status(500).json({ success: false, error: error.message });
@@ -43,7 +38,7 @@ export const generatePDFReport = async (req: Request, res: Response): Promise<vo
 };
 
 
-
+// Get the course name of a form
 export const getCourseNameAction = async (req: Request, res: Response): Promise<void> => {
   try {
     const id_form = parseInt(req.params.id_form, 10);

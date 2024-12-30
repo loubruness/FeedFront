@@ -18,8 +18,7 @@ export const useDashboard = () => {
 
   const generateReportHandler = async (id_form: number): Promise<void> => {
     try {
-      // Trigger the backend API to generate and return the PDF
-      console.log(`${process.env.API_HOST}`)
+      // Trigger the backend API to generate and return the PDF report
       const response = await fetch(`${process.env.API_HOST}/report/${id_form}`, {
         method: 'GET',
         headers: {
@@ -34,7 +33,7 @@ export const useDashboard = () => {
       // Get course name from the backend
       const { course_name } = await getCourseName(id_form);
 
-      // Retrieve file name from Content-Disposition (if sent by backend)
+      // Retrieve file name from Content-Disposition
       const contentDisposition = response.headers.get('Content-Disposition');
       let filename = `Report_${course_name}.pdf`;
       if (contentDisposition) {
