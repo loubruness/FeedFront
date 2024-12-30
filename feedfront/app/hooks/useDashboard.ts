@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Form } from "@/types";
-import { getForms, deleteForm, getCourseName, getFormAverageGrades } from "@/api/feedbackSystem";
+import { getForms, deleteForm, getCourseName } from "@/api/feedbackSystem";
 import { useRouter } from 'next/navigation';
 import { saveAs } from 'file-saver';
 

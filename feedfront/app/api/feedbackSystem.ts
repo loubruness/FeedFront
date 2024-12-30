@@ -85,10 +85,6 @@ export const getStudentFormToken = async (id_form: number) => {
   return await apiFetch(`/email/getStudentFormToken/${id_form}`);
 };
 
-export const getFormAverageGrades = async (id_form: number) => {
-  return await apiFetch(`/report/averageGrades/${id_form}`);
-};
-
 export const getCourseName = async (id_form: number) => {
   return await apiFetch(`/report/courseName/${id_form}`);
 };
