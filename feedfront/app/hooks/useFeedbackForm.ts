@@ -1,7 +1,14 @@
 import { Answer, Field, FormWithFields } from "@/types";
-import { createForm, finalizeForm, getCourseOptions, loadForm, submitAnswer, updateForm } from "@/api/feedbackSystem";
+import {
+  createForm,
+  finalizeForm,
+  getCourseOptions,
+  loadForm,
+  submitAnswer,
+  updateForm,
+} from "@/api/feedbackSystem";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { getUserRole } from "@/utils/roleUtils";
 
@@ -31,7 +38,7 @@ export const useFeedbackForm = () => {
       setFormTitle(data.course_name);
       setFields(data.fields);
       setFormStatus(data.status || "draft");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       alert(`Failed to load the form ${id}. Redirecting to create page.`);
       setIdForm(1);
@@ -42,7 +49,7 @@ export const useFeedbackForm = () => {
   const loadCourseOptions = async () => {
     const data = await getCourseOptions();
     setCourseOptions([loadedFormTitle, ...data]);
-  }
+  };
 
   const saveFormHandler = async () => {
     if (isCreatingForm && (!formTitle || formTitle === "Default")) {
@@ -52,12 +59,15 @@ export const useFeedbackForm = () => {
     if (isCreatingForm && idForm === 0 && formTitle !== "Default") {
       alert("You should note change the class name of the Default form.");
     }
-    const formToSave: FormWithFields = { id_form: idForm, course_name: formTitle, fields };
+    const formToSave: FormWithFields = {
+      id_form: idForm,
+      course_name: formTitle,
+      fields,
+    };
     if (isCreatingForm) {
       const newForm = await createForm(formToSave);
       router.push(`/pages/FeedbackSystem?idForm=${newForm.id_form}`);
-    }
-    else {
+    } else {
       updateForm(formToSave);
     }
   };
@@ -67,13 +77,16 @@ export const useFeedbackForm = () => {
       finalizeForm(idForm);
       setFormStatus("finalized");
     }
-  }
+  };
 
   const submitAnswerHandler = () => {
     const scores = fields.map((q) => {
-      const score = (
-        document.querySelector(`input[name="q${q.id_field}"]:checked`) as HTMLInputElement
-      )?.value || null;
+      const score =
+        (
+          document.querySelector(
+            `input[name="q${q.id_field}"]:checked`
+          ) as HTMLInputElement
+        )?.value || null;
       return { id: q.id_field, score };
     });
 
@@ -87,8 +100,11 @@ export const useFeedbackForm = () => {
 
     const answer: Answer = {
       id_form: idForm,
-      grades: scores.map((s) => ({ id_field: s.id, grade: parseInt(s.score || "3") })),
-      token : token || "",
+      grades: scores.map((s) => ({
+        id_field: s.id,
+        grade: parseInt(s.score || "3"),
+      })),
+      token: token || "",
     };
     submitAnswer(answer);
     router.push("/pages/FeedbackSystemOutro");
@@ -109,7 +125,12 @@ export const useFeedbackForm = () => {
       const newId = fields.length ? fields[fields.length - 1].id_field + 1 : 1;
       setFields([
         ...fields,
-        { id_field: newId, title: `Question ${newId}`, question: "Enter your question here...", editable: true },
+        {
+          id_field: newId,
+          title: `Question ${newId}`,
+          question: "Enter your question here...",
+          editable: true,
+        },
       ]);
     }
   };
@@ -131,7 +152,6 @@ export const useFeedbackForm = () => {
       loadFormHandler(idForm);
     }
   }, [searchParams]);
-
 
   useEffect(() => {
     loadCourseOptions();
