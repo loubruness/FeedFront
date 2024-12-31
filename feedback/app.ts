@@ -19,14 +19,14 @@ const { sign } = jwt;
 dotenv.config();
 
 const app = express();
-const PORT: number = 3001;
+const PORT: number = 3000;
 
 app.use(express.json());
 
 app.use(cors({
     origin: '*', // Allow requests from this origin
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
-    allowedHeaders: ['Content-Type, Authorization'], // Allow specific headers
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
 }));
 
 app.get('/', (req: Request, res: Response, next: NextFunction) => {

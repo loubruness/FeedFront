@@ -68,7 +68,6 @@ const getStudentForms = async (user_id: number) => {
     const courseNames = courses.map(course => course.name);
     const forms = await getCoursesForms(courseNames);
     const respondedFormsId = await getRespondedFormsIdByStudent(user_id);
-    console.log('getFormsAction: ', respondedFormsId);
     return forms.map(form => {
         if (respondedFormsId.includes(form.id_form)) {
             form.status = 'past';
@@ -214,7 +213,7 @@ export async function finalizeFormAction(request:Request, response:Response) {
 
         await updateForm({ ...form, status: 'finalized' });
 
-        nodeSchedule.scheduleJob(new Date(form.end_date), async () => {
+        nodeSchedule.scheduleJob(form.end_date, async () => {
             await sendFormAction(id_form);
         });
 
@@ -307,9 +306,9 @@ export async function deleteFormAction(request:Request, response:Response) {
  */
 export async function getCoursesNamesWithoutFormAction(request:Request, response:Response) {
     try {
-        if (request.body.user_role !== 'admin') {
-            return response.status(403).json({ error: 'Unauthorized access' });
-        }
+        // if (request.body.user_role !== 'admin') {
+        //     return response.status(403).json({ error: 'Unauthorized access' });
+        // }
         const courses = await fetchCoursesAction();
         const forms = await getForms();
         const courseNamesWithForms = forms.map(form => form.course_name);

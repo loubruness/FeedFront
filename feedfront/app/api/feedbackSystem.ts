@@ -1,6 +1,6 @@
 import { FormWithFields, Answer } from "@/types";
 
-const host = process.env.API_HOST;
+const host = `http://${process.env.NEXT_PUBLIC_BACK_ADDRESS}`;
 
 const getToken = () => localStorage.getItem("token");
 
@@ -83,4 +83,8 @@ export const submitAnswer = async (response: Answer) => {
 
 export const getStudentFormToken = async (id_form: number) => {
   return await apiFetch(`/email/getStudentFormToken/${id_form}`);
+};
+
+export const getCourseName = async (id_form: number) => {
+  return await apiFetch(`/report/courseName/${id_form}`);
 };

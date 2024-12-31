@@ -1,32 +1,8 @@
-import express, { Request, Response, Router } from 'express';
-import { getGradesFieldsonly, getGradesEntireForm, getAverageForm, generateReport} from '../controllers/report';
+import express, { Router } from 'express';
+import { generatePDFReport, getCourseNameAction } from '../controllers/report';
 
 const router = Router();
-
-router.get("/", (req, res) => {
-    res.send("Welcome to report routes");
-});
-
-router.get('/:id_form/:id_field', (req: Request, res: Response) => {
-    getGradesFieldsonly(req, res);
-});
-
-// router.get("/:id_form", (req, res) => {
-//     getGradesEntireForm(req, res);
-// });
-
-// router.get("/:id_form", (req, res) => {
-//     getAverageForm(req, res);
-// });
-
-
-
-// router.get("/:id_form", (req, res) => {
-//     generateReport(req, res);
-// });
-
-router.get("/:id_form", (req, res) => {
-    generateReport(req, res);
-});
+router.get('/:id_form', generatePDFReport);
+router.get('/courseName/:id_form', getCourseNameAction);
 
 export default router;

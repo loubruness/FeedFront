@@ -6,6 +6,7 @@ import { useDashboard } from "@/hooks/useDashboard";
 const TeacherDashboard = () => {
   const {
     forms,
+    generateReportHandler,
   } = useDashboard();
   return (
     <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
@@ -77,6 +78,7 @@ const TeacherDashboard = () => {
                       aria-expanded="false"
                       aria-haspopup="menu"
                       className="relative middle text-sky-500 none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 w-10 max-w-[40px] h-10 rounded-lg hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30"
+                      onClick={() => { generateReportHandler(form.id_form) }}
                     >
                       {/* SVG for download button */}
                       <svg
@@ -123,12 +125,12 @@ const TeacherDashboard = () => {
                 <tr key={form.id_form}>
                   <td className="py-3 px-5 border-b border-blue-gray-50">
                     <div className="gap-4 w-10/12">
-                      <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold">Advanced Programming</p>
+                      <p className="block antialiased font-sans text-sm leading-normal text-blue-gray-900 font-semibold">{form.course_name}</p>
                     </div>
                   </td>
                   <td className="py-3 px-5 border-b border-blue-gray-50">
                     <div className="w-10/12">
-                      <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">12/05/24</p>
+                      <p className="antialiased font-sans mb-1 block text-xs font-medium text-blue-gray-600">{new Date(form.end_date).toLocaleDateString()}</p>
                     </div>
                   </td>
                   <td className="py-3 px-5 border-b border-blue-gray-50">
@@ -136,6 +138,7 @@ const TeacherDashboard = () => {
                       aria-expanded="false"
                       aria-haspopup="menu"
                       className="relative middle text-sky-500 none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 w-10 max-w-[40px] h-10 rounded-lg hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30"
+                      onClick={() => { generateReportHandler(form.id_form) }}
                     >
                       {/* SVG for download button */}
                       <svg
