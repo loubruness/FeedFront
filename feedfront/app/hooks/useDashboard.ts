@@ -19,7 +19,7 @@ export const useDashboard = () => {
   const generateReportHandler = async (id_form: number): Promise<void> => {
     try {
       // Trigger the backend API to generate and return the PDF
-      const response = await fetch(`${process.env.API_HOST}/report/${id_form}`, {
+      const response = await fetch(`http://${process.env.NEXT_PUBLIC_BACK_ADDRESS}/report/${id_form}`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,

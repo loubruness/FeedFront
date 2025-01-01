@@ -108,7 +108,7 @@ async function sendFormEmailStudent(student_id : number, student_email : string,
 
     storeTokenForm(student_id, id_form, token);
     
-    const link = "http://localhost:3000/pages/FeedbackSystemIntro?idForm=" + id_form +"&token=" + token;
+    const link = "http://localhost:3000/pages/FeedbackSystemIntro?idForm=" + id_form;
     const date = new Date(endDate).toLocaleDateString();
 
     const templateData = {

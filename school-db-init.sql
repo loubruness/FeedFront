@@ -80,11 +80,18 @@ VALUES (3, 2);
 INSERT INTO efreiuser_course (efreiuser_id, course_id)
 VALUES (3, 3);
 INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (3, 4);
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
+VALUES (3, 5);
+
+
+INSERT INTO efreiuser_course (efreiuser_id, course_id)
 VALUES (4, 3);
 INSERT INTO efreiuser_course (efreiuser_id, course_id)
 VALUES (4, 4);
 INSERT INTO efreiuser_course (efreiuser_id, course_id)
 VALUES (4, 5);
+
 
 -- Assign courses to students
 

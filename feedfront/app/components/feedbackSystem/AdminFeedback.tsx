@@ -83,7 +83,7 @@ const AdminFields: React.FC<AdminFieldsProps> = ({
             ))}
             {isEditable  &&
             <div className="mt-8 text-center">
-                <button onClick={addFieldHandler} className="px-4 py-3 rounded-lg font-semibold text-indigo-500 border-2 border-indigo-500 hover:bg-indigo-500 hover:text-white hover:from-blue-600 hover:to-indigo-600">
+                <button onClick={addFieldHandler} className="ml-8 px-4 py-3 rounded-lg font-semibold text-indigo-500 border-2 border-indigo-500 hover:bg-indigo-500 hover:text-white hover:from-blue-600 hover:to-indigo-600">
                     <div className="flex justify-evenly align-center text-lg">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 mr-3">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />

@@ -6,7 +6,7 @@ import { getStudentFormToken } from '@/api/feedbackSystem';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useFeedbackForm } from '../../hooks/useFeedbackIntro';
-import { get } from 'http';
+import { getUserRole } from "@/utils/roleUtils";
 
 // Section component
 function Section({ title, content }: { title: string; content: string }) {
@@ -48,10 +48,18 @@ export default function FeedbackIntro(): JSX.Element {
                 if (!verifiedUser) {
                     alert("Invalid token, redirecting to dashboard");
                     router.push("./Dashboard");
+                }else{
+                    const encryptedRole = localStorage.getItem("encryptedRole") || "";
+                    const iv = localStorage.getItem("iv") || "";
+                    const role = getUserRole(encryptedRole, iv);
+                    if(role != "student"){
+                        alert("You are not authorized to access this page, redirecting to Login");
+                        router.push("./Login");
+                    }
                 }
             } else {
-                alert("Token not provided, redirecting to dashboard");
-                router.push("./Dashboard");
+                alert("Token not provided, redirecting to Login");
+                router.push("./Login");
             }
         };
         verify();
