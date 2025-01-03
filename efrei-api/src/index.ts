@@ -1,18 +1,27 @@
 import express, { Application, Request, Response } from "express";
-import userRoutes from "./routes/user";
-import studentRoutes from "./routes/student";
+
+import cors from 'cors';
 import courseRoutes from "./routes/course";
+import studentRoutes from "./routes/student";
+import userRoutes from "./routes/user";
 
 const application: Application = express();
 const port = 8000;
+
+// CORS
+application.use(cors({
+  origin: '*', // Allow requests from this origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow specific headers
+}));
+
+// Middlewares
+application.use(express.json());
 
 // Default route
 application.get("/", (request: Request, response: Response) => {
   response.json({ name: "Mock Efrei API" });
 });
-
-// Middlewares
-application.use(express.json());
 
 // Routes
 application.use("/user", userRoutes);
