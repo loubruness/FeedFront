@@ -10,4 +10,6 @@ COPY . /app
 
 RUN npx tsc
 
+COPY config/ /app/build/config/
+
 CMD ["node","build/app.js"]

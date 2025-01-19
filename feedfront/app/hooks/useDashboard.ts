@@ -44,8 +44,8 @@ export const useDashboard = () => {
       // Save the PDF as a file
       const blob = await response.blob();
       saveAs(blob, filename);
-    } catch (error: any) {
-      console.error('Error generating PDF:', error.message);
+    } catch (error: unknown) {
+      console.error('Error generating PDF:', error instanceof Error ? error.message : 'Unknown error');
     }
   };
   

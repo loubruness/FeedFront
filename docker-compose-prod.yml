@@ -7,12 +7,15 @@ services:
     ports:
       - "3000:3000"
   feedback:
-    build: 
+    build:
       context: ./feedback
       dockerfile: ./Dockerfile-prod
     container_name: feedfront-backend
     ports:
       - "3001:3000"
+    environment:
+      SEND_EMAILS_IMMEDIATELY: true
+      FRONTEND_PUBLIC_URL: http://localhost:3000
   efrei-api:
     build:
       context: ./efrei-api
