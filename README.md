@@ -79,3 +79,7 @@ In the docker-compose files, or using .env files, you can customize how the proj
 - FRONTEND_PUBLIC_URL (`string`, default: `http://localhost:3000`): The URL of the project to put inside of the emails.
 
 This will start the project and each service. To use the project, visit [http://localhost:3000/pages/Login](http://localhost:3000/pages/Login).
+
+## Potential features for future versions
+
+In the future, we think FeedFront could benefit from a dedicated analysis dashboard that would show analytics on the forms' responses and allow for tracking of KPIs instead of having to download separate reports from forms from different years and having to compare them manually to track the progression.
