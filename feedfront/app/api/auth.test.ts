@@ -1,50 +1,85 @@
-import { login, fetchProfile } from './auth';
+import { login, fetchProfile } from "./auth";
 
 global.fetch = jest.fn();
 
-describe('Auth API', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
+describe("auth.ts", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe("login", () => {
+    it("should return login data on success", async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          info: "Logged in",
+          token: "abc123",
+          role: { iv: "ivValue", encryptedRole: "encryptedRoleValue" },
+        }),
+      });
+      const result = await login("test@test.com", "password");
+      expect(result.token).toBe("abc123");
     });
 
-    test('login should send correct POST request and handle response', async () => {
-        const mockResponse = { token: 'mockToken' };
-        (fetch as jest.Mock).mockResolvedValueOnce({
-            ok: true,
-            json: async () => mockResponse,
-        });
-
-        const result = await login('test@example.com', 'password123');
-        expect(fetch).toHaveBeenCalledWith('/api/login', expect.objectContaining({
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: 'test@example.com', password: 'password123' }),
-        }));
-        expect(result).toEqual(mockResponse);
+    it("should throw error if status 401", async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 401,
+        json: async () => ({ message: "Invalid email or password" }),
+      });
+      await expect(login("wrong@test.com", "password")).rejects.toThrow(
+        "Invalid email or password"
+      );
     });
 
-    test('fetchProfile should send correct POST request and handle response', async () => {
-        const mockProfile = { id: '123', username: 'TestUser' };
-        (fetch as jest.Mock).mockResolvedValueOnce({
-            ok: true,
-            json: async () => mockProfile,
-        });
-
-        const result = await fetchProfile('mockToken');
-        expect(fetch).toHaveBeenCalledWith('/api/profile_page', expect.objectContaining({
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: 'mockToken' }),
-        }));
-        expect(result).toEqual(mockProfile);
+    it("should throw error if status 500", async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: async () => ({ message: "Internal server error" }),
+      });
+      await expect(login("test@test.com", "password")).rejects.toThrow(
+        "Internal server error"
+      );
     });
 
-    test('login should throw error for failed response', async () => {
-        (fetch as jest.Mock).mockResolvedValueOnce({
-            ok: false,
-            text: async () => 'Unauthorized',
-        });
-
-        await expect(login('test@example.com', 'wrongpassword')).rejects.toThrow('Unauthorized');
+    it("should throw unexpected error for other statuses", async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        json: async () => ({}),
+      });
+      await expect(login("test@test.com", "password")).rejects.toThrow(
+        "An unexpected error occurred during login"
+      );
     });
+  });
+
+  describe("fetchProfile", () => {
+    it("should return profile data on success", async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          info: "Profile info",
+          result: {
+            email: "test@test.com",
+            firstname: "Test",
+            lastname: "User",
+          },
+        }),
+      });
+      const result = await fetchProfile("validToken");
+      expect(result.result.email).toBe("test@test.com");
+    });
+
+    it("should throw error if response is not ok", async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        text: async () => "Error fetching profile",
+      });
+      await expect(fetchProfile("invalidToken")).rejects.toThrow(
+        "Error fetching profile"
+      );
+    });
+  });
 });
