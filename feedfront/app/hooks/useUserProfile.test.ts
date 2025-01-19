@@ -1,37 +1,34 @@
-import { useUserProfile } from './useUserProfile';
-import * as userService from '../services/userService';
+import { useUserProfile } from "./useUserProfile";
+import * as userService from "../services/userService";
+import { renderHook } from "@testing-library/react";
 
-jest.mock('../services/userService');
+jest.mock("../services/userService");
 
 // Mock the fetchUserProfile function
-describe('useUserProfile', () => {
-    const mockFetchUserProfile = userService.fetchUserProfile as jest.Mock;
+describe("useUserProfile", () => {
+  const mockFetchUserProfile = userService.fetchUserProfile as jest.Mock;
 
-    // Reset the mock before each test
-    it('should initialize with default state', () => {
-        const initialState = {
-            email: '',
-            firstName: '',
-            lastName: '',
-            errorInfo: '',
-            loading: true,
-        };
+  beforeEach(() => {
+    mockFetchUserProfile.mockReset();
+  });
 
-        const { email, firstName, lastName, errorInfo, loading } = useUserProfile();
-        
-        expect(email).toBe(initialState.email);
-        expect(firstName).toBe(initialState.firstName);
-        expect(lastName).toBe(initialState.lastName);
-        expect(errorInfo).toBe(initialState.errorInfo);
-        expect(loading).toBe(initialState.loading);
+  it("should initialize with default state", () => {
+    const { result } = renderHook(() => useUserProfile());
+
+    expect(result.current).toEqual({
+      email: "",
+      firstName: "",
+      lastName: "",
+      errorInfo: "No token found",
+      loading: false,
     });
+  });
 
-    // Test the loadUserData function
-    it('should load user profile data correctly', async () => {
-        mockFetchUserProfile.mockResolvedValue({
-          name: "",
-          content:"",
-        });
+  // Test the loadUserData function
+  it("should load user profile data correctly", async () => {
+    mockFetchUserProfile.mockResolvedValue({
+      name: "",
+      content: "",
     });
+  });
 });
-

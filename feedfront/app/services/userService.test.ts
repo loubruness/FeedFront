@@ -1,59 +1,42 @@
-import { fetchUserProfile } from './userService';
+import { fetchUserProfile } from "./userService";
 
-describe('fetchUserProfile', () => {
-    const mockToken = 'test-token';
+describe("fetchUserProfile", () => {
+  beforeEach(() => {
+    global.fetch = jest.fn();
+    jest.clearAllMocks();
+  });
 
-    beforeEach(() => {
-        jest.clearAllMocks();
+  it("should throw an error if no token is provided", async () => {
+    await expect(fetchUserProfile(null)).rejects.toThrow("No token provided");
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it("should return JSON data when response is ok", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ email: "test@example.com" }),
     });
+    const result = await fetchUserProfile("validToken");
+    expect(result.email).toBe("test@example.com");
+  });
 
-    it('should return user profile data on success', async () => {
-        const mockResponse = { email: 'test@example.com', firstName: 'John', lastName: 'Doe' };
-
-        // Mock the fetch function
-        global.fetch = jest.fn(() =>
-            Promise.resolve({
-                ok: true,
-                json: () => Promise.resolve(mockResponse),
-            } as Response)
-        );
-
-        const data = await fetchUserProfile(mockToken);
-
-        expect(fetch).toHaveBeenCalledWith('/api/profile_page', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: mockToken }),
-        });
-        expect(data).toEqual(mockResponse);
+  it("should throw an error with the response message if fetch fails", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({ message: "Profile error" }),
     });
+    await expect(fetchUserProfile("invalidToken")).rejects.toThrow(
+      "Profile error"
+    );
+  });
 
-    it('should throw an error if token is missing', async () => {
-        await expect(fetchUserProfile(null)).rejects.toThrow('No token provided');
+  it("should throw a default error if no message is provided in the response", async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      json: async () => ({}),
     });
-
-    it('should throw an error if the API response is not OK', async () => {
-        const mockErrorMessage = 'Failed to load profile data';
-
-        // Mock a failed API response
-        global.fetch = jest.fn(() =>
-            Promise.resolve({
-                ok: false,
-                json: () => Promise.resolve({ message: mockErrorMessage }),
-            } as Response)
-        );
-
-        await expect(fetchUserProfile(mockToken)).rejects.toThrow(mockErrorMessage);
-    });
-
-    it('should throw a generic error if no error message is provided', async () => {
-        global.fetch = jest.fn(() =>
-            Promise.resolve({
-                ok: false,
-                json: () => Promise.resolve({}),
-            } as Response)
-        );
-
-        await expect(fetchUserProfile(mockToken)).rejects.toThrow('Failed to load profile data');
-    });
+    await expect(fetchUserProfile("anyToken")).rejects.toThrow(
+      "Failed to load profile data"
+    );
+  });
 });

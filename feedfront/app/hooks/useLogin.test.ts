@@ -1,48 +1,82 @@
-import * as auth from '../api/auth';
+import { renderHook, act } from "@testing-library/react";
+import { useLogin } from "./useLogin";
+import * as auth from "../api/auth";
 
-import { useLogin } from '../hooks/useLogin';
+jest.mock("../api/auth");
 
-jest.mock('../api/auth'); // Mock the auth API module
+describe("useLogin", () => {
+  const mockLogin = auth.login as jest.Mock;
+  const onSuccess = jest.fn();
 
-describe('useLogin Hook', () => {
-    let setState: jest.Mock;
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
-    beforeEach(() => {
-        setState = jest.fn(); // Mock setState
-        jest.clearAllMocks();
+  it("should initialize with default state", () => {
+    const { result } = renderHook(() => useLogin(onSuccess));
+
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBe("");
+  });
+
+  it("should set error if email or password is empty", async () => {
+    const { result } = renderHook(() => useLogin(onSuccess));
+
+    await act(async () => {
+      await result.current.handleLogin("", "");
     });
 
-    it('handles successful login', async () => {
-        const mockOnSuccess = jest.fn();
-        const mockLogin = jest.spyOn(auth, 'login').mockResolvedValue({ info :"ook", token: 'fake-token' , role: { iv: '123', encryptedRole: 'Test Role' } });
-        const mockFetchProfile = jest.spyOn(auth, 'fetchProfile').mockResolvedValue({ info : "user fetched successfully", result : {email: 'test@efrei.fr', firstname : 'Test', lastname : 'User' }});
+    expect(result.current.error).toBe("Email and password are required");
+    expect(result.current.loading).toBe(false);
+  });
 
-        const { handleLogin } = useLogin(mockOnSuccess);
+  it("should call login and set token on success", async () => {
+    const mockResponse = {
+      token: "test-token",
+      role: { iv: "ivValue", encryptedRole: "encryptedRoleValue" },
+    };
+    mockLogin.mockResolvedValue(mockResponse);
 
-        await handleLogin('test@example.com', 'password123');
+    const { result } = renderHook(() => useLogin(onSuccess));
 
-        expect(mockLogin).toHaveBeenCalledWith('test@example.com', 'password123');
-        expect(mockFetchProfile).toHaveBeenCalledWith('fake-token');
-        expect(localStorage.getItem('token')).toBe('fake-token');
-        expect(localStorage.getItem('userId')).toBe('123');
-        expect(localStorage.getItem('userName')).toBe('Test User');
-        expect(mockOnSuccess).toHaveBeenCalled();
-        expect(setState).toHaveBeenCalledWith(true); // Loading: true at start
-        expect(setState).toHaveBeenCalledWith(false); // Loading: false at end
+    await act(async () => {
+      await result.current.handleLogin("test@example.com", "password");
     });
 
-    it('handles login errors', async () => {
-        const mockOnSuccess = jest.fn();
-        const mockLogin = jest.spyOn(auth, 'login').mockRejectedValue(new Error('Invalid credentials'));
+    expect(mockLogin).toHaveBeenCalledWith("test@example.com", "password");
+    expect(localStorage.getItem("token")).toBe("test-token");
+    expect(localStorage.getItem("encryptedRole")).toBe("encryptedRoleValue");
+    expect(localStorage.getItem("iv")).toBe("ivValue");
+    expect(onSuccess).toHaveBeenCalled();
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBe("");
+  });
 
-        const { handleLogin } = useLogin(mockOnSuccess);
+  it("should set error on login failure", async () => {
+    mockLogin.mockRejectedValue(new Error("Invalid email or password"));
 
-        await handleLogin('test@example.com', 'wrongpassword');
+    const { result } = renderHook(() => useLogin(onSuccess));
 
-        expect(mockLogin).toHaveBeenCalledWith('test@example.com', 'wrongpassword');
-        expect(setState).toHaveBeenCalledWith(true); // Loading: true at start
-        expect(setState).toHaveBeenCalledWith('Invalid credentials'); // Error state
-        expect(setState).toHaveBeenCalledWith(false); // Loading: false at end
-        expect(mockOnSuccess).not.toHaveBeenCalled();
+    await act(async () => {
+      await result.current.handleLogin("test@example.com", "wrongpassword");
     });
+
+    expect(mockLogin).toHaveBeenCalledWith("test@example.com", "wrongpassword");
+    expect(result.current.error).toBe("Invalid email or password");
+    expect(result.current.loading).toBe(false);
+  });
+
+  it("should handle unexpected errors", async () => {
+    mockLogin.mockRejectedValue("Unexpected error");
+
+    const { result } = renderHook(() => useLogin(onSuccess));
+
+    await act(async () => {
+      await result.current.handleLogin("test@example.com", "password");
+    });
+
+    expect(mockLogin).toHaveBeenCalledWith("test@example.com", "password");
+    expect(result.current.error).toBe("An error occurred");
+    expect(result.current.loading).toBe(false);
+  });
 });
